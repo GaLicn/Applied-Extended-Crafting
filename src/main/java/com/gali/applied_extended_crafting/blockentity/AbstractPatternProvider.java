@@ -4,6 +4,7 @@ import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
@@ -11,12 +12,14 @@ import appeng.api.stacks.GenericStack;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import appeng.api.config.PowerMultiplier;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -30,8 +33,10 @@ import java.util.Optional;
 public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         implements IActionHost, ServerTickingBlockEntity {
     private static final String NBT_PENDING_OUTPUTS = "pendingOutputs";
+    private static final String NBT_POWERED = "powered";
 
     private final List<GenericStack> pendingOutputs = new ArrayList<>();
+    private boolean powered;
 
     protected AbstractPatternProvider(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
@@ -46,6 +51,24 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     @Override
     protected PatternProviderLogic createLogic() {
         return new VirtualPatternProviderLogic(this.getMainNode(), this, this.getPatternSlotCount());
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+
+        if (!this.isClientSide()) {
+            this.updatePowerState(true);
+        }
+    }
+
+    @Override
+    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        super.onMainNodeStateChanged(reason);
+
+        if (!this.isClientSide() && reason != IGridNodeListener.State.GRID_BOOT) {
+            this.updatePowerState(true);
+        }
     }
 
     @Override
@@ -136,6 +159,18 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     }
 
     @Override
+    protected void saveVisualState(CompoundTag data) {
+        super.saveVisualState(data);
+        data.putBoolean(NBT_POWERED, this.powered);
+    }
+
+    @Override
+    protected void loadVisualState(CompoundTag data) {
+        super.loadVisualState(data);
+        this.powered = data.getBoolean(NBT_POWERED);
+    }
+
+    @Override
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
 
@@ -146,6 +181,20 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
                 this.pendingOutputs.add(pendingOutput);
             }
         }
+    }
+
+    @Override
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
+        boolean changed = super.readFromStream(data);
+        boolean oldPowered = this.powered;
+        this.powered = data.readBoolean();
+        return changed || oldPowered != this.powered;
+    }
+
+    @Override
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
+        super.writeToStream(data);
+        data.writeBoolean(this.powered);
     }
 
     protected Optional<Map<AEKey, Long>> extractInputs(IPatternDetails patternDetails) {
@@ -172,6 +221,27 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         }
 
         return result;
+    }
+
+    public boolean isPowered() {
+        return this.powered;
+    }
+
+    private void updatePowerState(boolean syncToClient) {
+        boolean newState = false;
+
+        var grid = this.getMainNode().getGrid();
+        if (grid != null) {
+            newState = this.getMainNode().isPowered()
+                    && grid.getEnergyService().extractAEPower(1, Actionable.SIMULATE, PowerMultiplier.CONFIG) > 0.0001;
+        }
+
+        if (newState != this.powered) {
+            this.powered = newState;
+            if (syncToClient) {
+                this.markForClientUpdate();
+            }
+        }
     }
 
     private final class VirtualPatternProviderLogic extends PatternProviderLogic {

@@ -1,5 +1,6 @@
 package com.gali.applied_extended_crafting.block;
 
+import appeng.block.crafting.PatternProviderBlock;
 import com.gali.applied_extended_crafting.blockentity.TableUltimatePatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -10,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class TableUltimatePatternProviderBlock extends appeng.block.crafting.PatternProviderBlock {
+public class TableUltimatePatternProviderBlock extends PatternProviderBlock {
     private boolean initialized = false;
 
     public TableUltimatePatternProviderBlock() {
