@@ -20,8 +20,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +76,12 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     @Override
     public IGridNode getActionableNode() {
         return this.getMainNode().getNode();
+    }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        var customName = super.getCustomName();
+        return customName != null ? customName : this.getName();
     }
 
     protected boolean isPatternSupported(IPatternDetails patternDetails) {
