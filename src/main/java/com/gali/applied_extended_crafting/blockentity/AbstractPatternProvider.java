@@ -3,6 +3,7 @@ package com.gali.applied_extended_crafting.blockentity;
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
@@ -174,7 +175,8 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     }
 
     private final class VirtualPatternProviderLogic extends PatternProviderLogic {
-        private VirtualPatternProviderLogic(appeng.api.networking.IManagedGridNode mainNode, AbstractPatternProvider host, int slots) {
+        private VirtualPatternProviderLogic(IManagedGridNode mainNode, AbstractPatternProvider host,
+                                            int slots) {
             super(mainNode, host, slots);
         }
 

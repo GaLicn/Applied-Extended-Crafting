@@ -33,7 +33,11 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
     public boolean matchesRecipe(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
         for (var holder : this.getRecipes(level)) {
             var recipe = holder.value();
-            if (recipe.getTier() != this.tier || !recipe.hasRequiredTier()) {
+            if (recipe.hasRequiredTier()) {
+                if (recipe.getTier() != this.tier) {
+                    continue;
+                }
+            } else if (recipe.getTier() > this.tier) {
                 continue;
             }
 
