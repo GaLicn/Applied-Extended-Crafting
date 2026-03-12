@@ -1,5 +1,10 @@
 package com.gali.applied_extended_crafting;
 
+import com.gali.applied_extended_crafting.init.ModBlockEntities;
+import com.gali.applied_extended_crafting.init.ModBlocks;
+import com.gali.applied_extended_crafting.init.ModCapabilities;
+import com.gali.applied_extended_crafting.init.ModItems;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -10,8 +15,18 @@ public class Applied_extended_crafting {
     public static final String MODID = "applied_extended_crafting";
 
     public Applied_extended_crafting(IEventBus modEventBus) {
+        ModBlocks.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModCapabilities.register(modEventBus);
+        modEventBus.addListener(this::onCommonSetup);
+
         if (FMLEnvironment.dist == Dist.CLIENT) {
             new ClientModEvents(modEventBus);
         }
+    }
+
+    private void onCommonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> ModBlocks.TABLE_BASIC_PATTERN_PROVIDER.get().initializeBlockEntity());
     }
 }

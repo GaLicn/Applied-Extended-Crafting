@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find 'd:\\\\Project\\\\MC\\\\Applied Extended Crafting/othermods/Applied-Energistics-2-1.21.1/src/main/java/appeng/api/networking' -type f -name *.java)",
+      "Bash(./gradlew build:*)",
+      "Bash(gradlew.bat build:*)",
+      "Bash(cmd.exe /c gradlew.bat build --console=plain)",
+      "Bash(find 'd:/Project/MC/Applied Extended Crafting' -name *.gradle -o -name gradle.properties)",
+      "Bash(grep -r setBlockEntity 'd:/Project/MC/Applied Extended Crafting/othermods/Applied-Energistics-2-1.21.1/src' --include=*.java -l)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}
