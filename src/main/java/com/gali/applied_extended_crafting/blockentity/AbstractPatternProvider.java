@@ -7,12 +7,17 @@ import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
+import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
+import appeng.menu.ISubMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuHostLocator;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.api.config.PowerMultiplier;
+import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -21,6 +26,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -76,6 +83,26 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     @Override
     public IGridNode getActionableNode() {
         return this.getMainNode().getNode();
+    }
+
+    @Override
+    public void openMenu(Player player, MenuHostLocator locator) {
+        MenuOpener.open(TablePatternProviderMenu.TYPE, player, locator);
+    }
+
+    @Override
+    public void returnToMainMenu(Player player, ISubMenu subMenu) {
+        MenuOpener.returnTo(TablePatternProviderMenu.TYPE, player, subMenu.getLocator());
+    }
+
+    @Override
+    public AEItemKey getTerminalIcon() {
+        return AEItemKey.of(this.getMainMenuIcon());
+    }
+
+    @Override
+    public ItemStack getMainMenuIcon() {
+        return new ItemStack(this.getBlockState().getBlock());
     }
 
     protected boolean isPatternSupported(IPatternDetails patternDetails) {

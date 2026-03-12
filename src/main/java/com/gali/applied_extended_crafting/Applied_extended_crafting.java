@@ -4,6 +4,7 @@ import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModBlocks;
 import com.gali.applied_extended_crafting.init.ModCapabilities;
 import com.gali.applied_extended_crafting.init.ModItems;
+import com.gali.applied_extended_crafting.init.ModMenuTypes;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +19,7 @@ public class Applied_extended_crafting {
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
         ModCapabilities.register(modEventBus);
         modEventBus.addListener(this::onCommonSetup);
 
