@@ -27,6 +27,9 @@ public class Applied_extended_crafting {
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> ModBlocks.TABLE_BASIC_PATTERN_PROVIDER.get().initializeBlockEntity());
+        event.enqueueWork(() -> {
+            ModBlocks.TABLE_BASIC_PATTERN_PROVIDER.get().initializeBlockEntity();
+            ModBlocks.TABLE_ADVANCED_PATTERN_PROVIDER.get().initializeBlockEntity();
+        });
     }
 }

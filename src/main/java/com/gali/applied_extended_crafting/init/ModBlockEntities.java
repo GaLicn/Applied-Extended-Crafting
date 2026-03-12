@@ -1,6 +1,7 @@
 package com.gali.applied_extended_crafting.init;
 
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
+import com.gali.applied_extended_crafting.blockentity.TableAdvancedPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableBasicPatternProviderBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,6 +18,13 @@ public final class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(
                             TableBasicPatternProviderBlockEntity::new,
                             ModBlocks.TABLE_BASIC_PATTERN_PROVIDER.get()
+                    ).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TableAdvancedPatternProviderBlockEntity>> TABLE_ADVANCED_PATTERN_PROVIDER =
+            BLOCK_ENTITIES.register("table_advanced_pattern_provider",
+                    () -> BlockEntityType.Builder.of(
+                            TableAdvancedPatternProviderBlockEntity::new,
+                            ModBlocks.TABLE_ADVANCED_PATTERN_PROVIDER.get()
                     ).build(null));
 
     private ModBlockEntities() {

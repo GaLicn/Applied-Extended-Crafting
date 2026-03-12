@@ -1,6 +1,7 @@
 package com.gali.applied_extended_crafting.init;
 
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
+import com.gali.applied_extended_crafting.block.TableAdvancedPatternProviderBlock;
 import com.gali.applied_extended_crafting.block.TableBasicPatternProviderBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -12,6 +13,11 @@ public final class ModBlocks {
     public static final DeferredBlock<TableBasicPatternProviderBlock> TABLE_BASIC_PATTERN_PROVIDER = BLOCKS.register(
             "table_basic_pattern_provider",
             TableBasicPatternProviderBlock::new
+    );
+
+    public static final DeferredBlock<TableAdvancedPatternProviderBlock> TABLE_ADVANCED_PATTERN_PROVIDER = BLOCKS.register(
+            "table_advanced_pattern_provider",
+            TableAdvancedPatternProviderBlock::new
     );
 
     private ModBlocks() {

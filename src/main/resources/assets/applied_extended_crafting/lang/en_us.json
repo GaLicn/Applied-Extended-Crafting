@@ -1,3 +1,4 @@
 {
-  "block.applied_extended_crafting.table_basic_pattern_provider": "Basic Table Pattern Provider"
+  "block.applied_extended_crafting.table_basic_pattern_provider": "Basic Table Pattern Provider",
+  "block.applied_extended_crafting.table_advanced_pattern_provider": "Advanced Table Pattern Provider"
 }
