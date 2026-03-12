@@ -18,5 +18,20 @@ public final class ModCapabilities {
                 ModBlockEntities.TABLE_BASIC_PATTERN_PROVIDER.get(),
                 (blockEntity, context) -> blockEntity
         );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.TABLE_ADVANCED_PATTERN_PROVIDER.get(),
+                (blockEntity,context)-> blockEntity
+        );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.TABLE_ELITE_PATTERN_PROVIDER.get(),
+                (blockEntity,context)-> blockEntity
+        );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.TABLE_ULTIMATE_PATTERN_PROVIDER.get(),
+                (blockEntity,context)-> blockEntity
+        );
     }
 }

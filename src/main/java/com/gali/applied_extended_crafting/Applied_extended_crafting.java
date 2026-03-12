@@ -30,6 +30,8 @@ public class Applied_extended_crafting {
         event.enqueueWork(() -> {
             ModBlocks.TABLE_BASIC_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.TABLE_ADVANCED_PATTERN_PROVIDER.get().initializeBlockEntity();
+            ModBlocks.TABLE_ELITE_PATTERN_PROVIDER.get().initializeBlockEntity();
+            ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER.get().initializeBlockEntity();
         });
     }
 }

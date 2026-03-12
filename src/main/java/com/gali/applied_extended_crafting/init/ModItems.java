@@ -17,6 +17,14 @@ public final class ModItems {
             ModBlocks.TABLE_ADVANCED_PATTERN_PROVIDER
     );
 
+    public static final DeferredItem<BlockItem> TABLE_ELITE_PATTERN_PROVIDER = ITEMS.registerSimpleBlockItem(
+            ModBlocks.TABLE_ELITE_PATTERN_PROVIDER
+    );
+
+    public static final DeferredItem<BlockItem> TABLE_ULTIMATE_PATTERN_PROVIDER = ITEMS.registerSimpleBlockItem(
+            ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER
+    );
+
     private ModItems() {
     }
 
