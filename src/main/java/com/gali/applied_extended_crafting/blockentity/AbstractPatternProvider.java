@@ -78,12 +78,6 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         return this.getMainNode().getNode();
     }
 
-    @Override
-    public @Nullable Component getCustomName() {
-        var customName = super.getCustomName();
-        return customName != null ? customName : this.getName();
-    }
-
     protected boolean isPatternSupported(IPatternDetails patternDetails) {
         var level = this.getLevel();
         if (level == null) {
