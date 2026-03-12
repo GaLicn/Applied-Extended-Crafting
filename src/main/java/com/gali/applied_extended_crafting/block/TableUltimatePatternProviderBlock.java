@@ -4,11 +4,14 @@ import appeng.block.crafting.PatternProviderBlock;
 import com.gali.applied_extended_crafting.blockentity.TableUltimatePatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class TableUltimatePatternProviderBlock extends PatternProviderBlock {
@@ -47,5 +50,10 @@ public class TableUltimatePatternProviderBlock extends PatternProviderBlock {
             BlockEntityType<T> type) {
         initializeBlockEntity();
         return super.getTicker(level, state, type);
+    }
+
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
     }
 }
