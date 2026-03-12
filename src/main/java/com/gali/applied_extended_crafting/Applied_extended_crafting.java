@@ -3,6 +3,7 @@ package com.gali.applied_extended_crafting;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModBlocks;
 import com.gali.applied_extended_crafting.init.ModCapabilities;
+import com.gali.applied_extended_crafting.init.ModCreativeModeTabs;
 import com.gali.applied_extended_crafting.init.ModItems;
 import com.gali.applied_extended_crafting.init.ModMenuTypes;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -18,6 +19,7 @@ public class Applied_extended_crafting {
     public Applied_extended_crafting(IEventBus modEventBus) {
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        ModCreativeModeTabs.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
         ModCapabilities.register(modEventBus);

@@ -1,4 +1,5 @@
 {
+  "itemGroup.applied_extended_crafting": "Applied Extended Crafting",
   "block.applied_extended_crafting.table_basic_pattern_provider": "Basic Table Assembly Station",
   "block.applied_extended_crafting.table_advanced_pattern_provider": "Advanced Table Assembly Station",
   "block.applied_extended_crafting.table_elite_pattern_provider": "Elite Table Assembly Station",
