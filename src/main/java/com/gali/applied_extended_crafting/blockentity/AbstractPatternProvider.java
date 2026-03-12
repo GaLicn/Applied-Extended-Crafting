@@ -2,6 +2,7 @@ package com.gali.applied_extended_crafting.blockentity;
 
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
+import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.IGridNodeListener;
@@ -17,6 +18,8 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.api.config.PowerMultiplier;
+import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.filter.IAEItemFilter;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
@@ -117,6 +120,20 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         }
 
         return this.getRecipeMatcher().matchesRecipe(patternInputs.get(), this.extractOutputs(patternDetails), level);
+    }
+
+    protected boolean isPatternItemValid(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        var level = this.getLevel();
+        if (level == null) {
+            return false;
+        }
+
+        var patternDetails = PatternDetailsHelper.decodePattern(stack, level);
+        return patternDetails != null && this.isPatternSupported(patternDetails);
     }
 
     protected boolean pushPatternToNetwork(IPatternDetails patternDetails) {
@@ -277,6 +294,15 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         private VirtualPatternProviderLogic(IManagedGridNode mainNode, AbstractPatternProvider host,
                                             int slots) {
             super(mainNode, host, slots);
+
+            if (this.getPatternInv() instanceof AppEngInternalInventory patternInventory) {
+                patternInventory.setFilter(new IAEItemFilter() {
+                    @Override
+                    public boolean allowInsert(appeng.api.inventories.InternalInventory inv, int slot, ItemStack stack) {
+                        return AbstractPatternProvider.this.isPatternItemValid(stack);
+                    }
+                });
+            }
         }
 
         @Override
