@@ -25,6 +25,7 @@ public final class ModCreativeModeTabs {
                         output.accept(ModItems.TABLE_ADVANCED_PATTERN_PROVIDER.get());
                         output.accept(ModItems.TABLE_ELITE_PATTERN_PROVIDER.get());
                         output.accept(ModItems.TABLE_ULTIMATE_PATTERN_PROVIDER.get());
+                        output.accept(ModItems.ENDER_CRAFTER_PATTERN_PROVIDER.get());
                     })
                     .build()
     );

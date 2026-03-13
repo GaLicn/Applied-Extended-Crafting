@@ -33,5 +33,10 @@ public final class ModCapabilities {
                 ModBlockEntities.TABLE_ULTIMATE_PATTERN_PROVIDER.get(),
                 (blockEntity,context)-> blockEntity
         );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
+                (blockEntity, context) -> blockEntity
+        );
     }
 }

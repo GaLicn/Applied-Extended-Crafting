@@ -25,6 +25,10 @@ public final class ModItems {
             ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER
     );
 
+    public static final DeferredItem<BlockItem> ENDER_CRAFTER_PATTERN_PROVIDER = ITEMS.registerSimpleBlockItem(
+            ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER
+    );
+
     private ModItems() {
     }
 

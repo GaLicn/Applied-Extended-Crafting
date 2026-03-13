@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model":"extendedcrafting:block/ender_crafter"}
+  }
+}
