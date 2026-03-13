@@ -7,6 +7,8 @@ import appeng.api.stacks.KeyCounter;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
+import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
+import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.EnderCrafterRecipeMatcher;
@@ -28,7 +30,9 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
     private static final String NBT_PROCESSING_OUTPUTS = "processingOutputs";
     private static final String NBT_PROCESSING_TIME = "processingTime";
     private static final String NBT_PROCESSING_TIME_TOTAL = "processingTimeTotal";
-    private static final int PROCESSING_DURATION = 100;
+    private static final int ALTERNATOR_SCAN_RADIUS = 3;
+    private static final int INSTANT_OUTPUT_ALTERNATOR_THRESHOLD = 147;
+    private static final int MINIMUM_PROCESSING_TICKS = 20;
 
     private final EnderCrafterRecipeMatcher recipeMatcher = new EnderCrafterRecipeMatcher();
     private final List<GenericStack> processingInputs = new ArrayList<>();
@@ -62,11 +66,21 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
 
     @Override
     protected boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputHolder) {
-        if (this.isBusyForPush() || !this.isPatternSupported(patternDetails)) {
+        if (!this.isPatternSupported(patternDetails)) {
             return false;
         }
 
         if (this.getMainNode().getGrid() == null) {
+            return false;
+        }
+
+        int alternatorCount = this.getAlternatorCount();
+        if (this.shouldOutputInstantly(alternatorCount)) {
+            this.finishProcessingImmediately();
+            return this.pushPatternToNetwork(patternDetails);
+        }
+
+        if (alternatorCount <= 0 || this.isBusyForPush()) {
             return false;
         }
 
@@ -79,8 +93,8 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
         this.processingInputs.addAll(this.collectDisplayInputs(patternDetails));
         this.processingOutputs.clear();
         this.processingOutputs.addAll(outputs);
-        this.processingTime = PROCESSING_DURATION;
-        this.processingTimeTotal = PROCESSING_DURATION;
+        this.processingTimeTotal = this.getProcessingDurationTicks(alternatorCount);
+        this.processingTime = this.processingTimeTotal;
         this.saveChanges();
 
         return true;
@@ -88,29 +102,44 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
 
     @Override
     protected boolean isBusyForPush() {
-        return this.isProcessing();
+        return !this.shouldOutputInstantly(this.getAlternatorCount()) && this.isProcessing();
     }
 
     @Override
     public void serverTick() {
-        super.serverTick();
-
         var level = this.getLevel();
-        if (level == null || level.isClientSide() || !this.isProcessing()) {
+        if (level == null || level.isClientSide()) {
             return;
         }
 
-        this.processingTime--;
-        if (this.processingTime > 0) {
-            if (this.processingTime % 20 == 0) {
-                this.setChanged();
+        int alternatorCount = this.getAlternatorCount();
+        if (this.isProcessing()) {
+            if (this.shouldOutputInstantly(alternatorCount)) {
+                this.finishProcessingImmediately();
+            } else if (alternatorCount > 0) {
+                int requiredTicks = this.getProcessingDurationTicks(alternatorCount);
+                long completedTime = Math.max(0L, (long) this.processingTimeTotal - this.processingTime) + 1L;
+
+                this.processingTimeTotal = requiredTicks;
+                if (completedTime >= requiredTicks) {
+                    this.finishProcessingImmediately();
+                } else {
+                    this.processingTime = requiredTicks - (int) completedTime;
+                    if (completedTime % 20L == 0L) {
+                        this.setChanged();
+                    }
+                }
+            } else {
+                int baseDuration = this.getBaseProcessingDurationTicks();
+                if (this.processingTime != baseDuration || this.processingTimeTotal != baseDuration) {
+                    this.processingTime = baseDuration;
+                    this.processingTimeTotal = baseDuration;
+                    this.setChanged();
+                }
             }
-            return;
         }
 
-        var completedOutputs = List.copyOf(this.processingOutputs);
-        this.clearProcessingState();
-        this.enqueueOutputs(completedOutputs);
+        super.serverTick();
     }
 
     @Override
@@ -205,6 +234,50 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
         }
 
         return result;
+    }
+
+    private int getAlternatorCount() {
+        var level = this.getLevel();
+        if (level == null) {
+            return 0;
+        }
+
+        int alternatorCount = 0;
+        var pos = this.getBlockPos();
+        for (var checkPos : BlockPos.betweenClosed(
+                pos.offset(-ALTERNATOR_SCAN_RADIUS, -ALTERNATOR_SCAN_RADIUS, -ALTERNATOR_SCAN_RADIUS),
+                pos.offset(ALTERNATOR_SCAN_RADIUS, ALTERNATOR_SCAN_RADIUS, ALTERNATOR_SCAN_RADIUS))) {
+            if (level.getBlockState(checkPos).getBlock() instanceof EnderAlternatorBlock) {
+                alternatorCount++;
+            }
+        }
+
+        return alternatorCount;
+    }
+
+    private int getBaseProcessingDurationTicks() {
+        return Math.max(MINIMUM_PROCESSING_TICKS, 20 * ModConfigs.ENDER_CRAFTER_TIME_REQUIRED.get());
+    }
+
+    private int getProcessingDurationTicks(int alternatorCount) {
+        int timeRequired = this.getBaseProcessingDurationTicks();
+        double effectiveness = ModConfigs.ENDER_CRAFTER_ALTERNATOR_EFFECTIVENESS.get();
+        return (int) Math.max(timeRequired - (timeRequired * (effectiveness * alternatorCount)),
+                MINIMUM_PROCESSING_TICKS);
+    }
+
+    private boolean shouldOutputInstantly(int alternatorCount) {
+        return alternatorCount >= INSTANT_OUTPUT_ALTERNATOR_THRESHOLD;
+    }
+
+    private void finishProcessingImmediately() {
+        if (!this.isProcessing()) {
+            return;
+        }
+
+        var completedOutputs = List.copyOf(this.processingOutputs);
+        this.clearProcessingState();
+        this.enqueueOutputs(completedOutputs);
     }
 
     private void clearProcessingState() {
