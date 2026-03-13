@@ -28,7 +28,7 @@ import java.util.List;
 public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafterPatternProviderMenu> {
     private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(
             Applied_extended_crafting.MODID,
-            "textures/screen/ender_crafter_pattern_provider.png"
+            "textures/gui/ender_crafter_pattern_provider.png"
     );
 
     private static final int PROGRESS_X = 94;
