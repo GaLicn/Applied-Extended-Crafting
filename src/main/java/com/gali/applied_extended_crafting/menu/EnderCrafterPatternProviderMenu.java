@@ -67,6 +67,13 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
             }
         });
 
+        this.getSlots(SlotSemantics.STORAGE).forEach(slot -> {
+            if (slot instanceof AppEngSlot appEngSlot) {
+                appEngSlot.setSlotEnabled(false);
+                appEngSlot.setActive(false);
+            }
+        });
+
         var previewGrid = this.previewGridInv.createMenuWrapper();
         var previewResult = this.previewResultInv.createMenuWrapper();
 
