@@ -1,17 +1,8 @@
 package com.gali.applied_extended_crafting.client.gui;
 
 import appeng.api.config.LockCraftingMode;
-import appeng.api.config.Settings;
-import appeng.api.config.YesNo;
 import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
 import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.widgets.ServerSettingToggleButton;
-import appeng.client.gui.widgets.SettingToggleButton;
-import appeng.client.gui.widgets.ToggleButton;
-import appeng.core.localization.GuiText;
-import appeng.core.network.ServerboundPacket;
-import appeng.core.network.serverbound.ConfigButtonPacket;
 import appeng.menu.SlotSemantics;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
 import com.gali.applied_extended_crafting.blockentity.AbstractPatternProvider;
@@ -21,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -38,35 +28,12 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
     private static final int PROGRESS_TEXTURE_X = 176;
     private static final int PROGRESS_TEXTURE_Y = 0;
 
-    private final SettingToggleButton<YesNo> blockingModeButton;
-    private final SettingToggleButton<LockCraftingMode> lockCraftingModeButton;
-    private final ToggleButton showInPatternAccessTerminalButton;
     private final EnderCrafterPatternProviderLockReason lockReason;
 
     public EnderCrafterPatternProviderScreen(EnderCrafterPatternProviderMenu menu, Inventory playerInventory,
                                              Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.setTextContent(TEXT_ID_DIALOG_TITLE, title);
-
-        this.blockingModeButton = new ServerSettingToggleButton<>(Settings.BLOCKING_MODE, YesNo.NO);
-        this.addToLeftToolbar(this.blockingModeButton);
-
-        this.lockCraftingModeButton = new ServerSettingToggleButton<>(
-                Settings.LOCK_CRAFTING_MODE,
-                LockCraftingMode.NONE
-        );
-        this.addToLeftToolbar(this.lockCraftingModeButton);
-
-        this.widgets.addOpenPriorityButton();
-
-        this.showInPatternAccessTerminalButton = new ToggleButton(
-                Icon.PATTERN_ACCESS_SHOW,
-                Icon.PATTERN_ACCESS_HIDE,
-                GuiText.PatternAccessTerminal.text(),
-                GuiText.PatternAccessTerminalHint.text(),
-                btn -> this.selectNextPatternProviderMode()
-        );
-        this.addToLeftToolbar(this.showInPatternAccessTerminalButton);
 
         this.lockReason = new EnderCrafterPatternProviderLockReason(this);
         this.widgets.add("lockReason", this.lockReason);
@@ -78,9 +45,6 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
 
         this.setSlotsHidden(SlotSemantics.STORAGE, true);
         this.lockReason.setVisible(this.menu.getLockCraftingMode() != LockCraftingMode.NONE);
-        this.blockingModeButton.set(this.menu.getBlockingMode());
-        this.lockCraftingModeButton.set(this.menu.getLockCraftingMode());
-        this.showInPatternAccessTerminalButton.setState(this.menu.getShowInAccessTerminal() == YesNo.YES);
     }
 
     @Override
@@ -163,9 +127,4 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
         return frame <= 0 ? PROGRESS_WIDTH : (int) frame;
     }
 
-    private void selectNextPatternProviderMode() {
-        boolean backwards = this.isHandlingRightClick();
-        ServerboundPacket message = new ConfigButtonPacket(Settings.PATTERN_ACCESS_TERMINAL, backwards);
-        PacketDistributor.sendToServer(message);
-    }
 }
