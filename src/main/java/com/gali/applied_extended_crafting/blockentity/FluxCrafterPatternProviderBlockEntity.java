@@ -1,7 +1,5 @@
 package com.gali.applied_extended_crafting.blockentity;
 
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
@@ -10,6 +8,7 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import com.blakebr0.extendedcrafting.api.crafting.IFluxCrafterRecipe;
+import com.blakebr0.extendedcrafting.tileentity.FluxAlternatorTileEntity;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.menu.FluxCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.FluxCrafterRecipeMatcher;
@@ -28,6 +27,7 @@ import java.util.List;
 
 public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvider
         implements FluxCrafterPatternProviderMenuHost {
+    private static final int ALTERNATOR_SCAN_RADIUS = 3;
     private static final String NBT_PROCESSING_INPUTS = "processingInputs";
     private static final String NBT_PROCESSING_OUTPUTS = "processingOutputs";
     private static final String NBT_PROCESSING_ENERGY = "processingEnergy";
@@ -37,7 +37,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
     private final FluxCrafterRecipeMatcher recipeMatcher = new FluxCrafterRecipeMatcher();
     private final List<GenericStack> processingInputs = new ArrayList<>();
     private final List<GenericStack> processingOutputs = new ArrayList<>();
-    private double processingEnergy;
+    private int processingEnergy;
     private int processingEnergyTotal;
     private int processingPowerRate;
 
@@ -141,7 +141,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
             processingOutputsTag.add(GenericStack.writeTag(registries, processingOutput));
         }
         data.put(NBT_PROCESSING_OUTPUTS, processingOutputsTag);
-        data.putDouble(NBT_PROCESSING_ENERGY, this.processingEnergy);
+        data.putInt(NBT_PROCESSING_ENERGY, this.processingEnergy);
         data.putInt(NBT_PROCESSING_ENERGY_TOTAL, this.processingEnergyTotal);
         data.putInt(NBT_PROCESSING_POWER_RATE, this.processingPowerRate);
     }
@@ -166,7 +166,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
             }
         }
 
-        this.processingEnergy = Math.max(0, data.getDouble(NBT_PROCESSING_ENERGY));
+        this.processingEnergy = Math.max(0, data.getInt(NBT_PROCESSING_ENERGY));
         this.processingEnergyTotal = Math.max(0, data.getInt(NBT_PROCESSING_ENERGY_TOTAL));
         this.processingPowerRate = Math.max(0, data.getInt(NBT_PROCESSING_POWER_RATE));
         if (!this.isProcessing()) {
@@ -185,7 +185,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
             return 0;
         }
 
-        return (int) Math.min(width, this.processingEnergy * width / this.processingEnergyTotal);
+        return Math.min(width, this.processingEnergy * width / this.processingEnergyTotal);
     }
 
     @Override
@@ -212,7 +212,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
 
     @Override
     public int getMenuEnergyStored() {
-        return (int) Math.max(0, Math.min(Integer.MAX_VALUE, Math.floor(this.processingEnergy)));
+        return this.processingEnergy;
     }
 
     @Override
@@ -237,31 +237,50 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
     }
 
     private void processEnergyStep() {
-        var grid = this.getMainNode().getGrid();
-        if (grid == null) {
+        if (!this.isProcessing()) {
             return;
         }
 
-        double remaining = Math.max(0, this.processingEnergyTotal - this.processingEnergy);
-        if (remaining <= 0) {
-            this.finishProcessing();
+        var alternators = this.getAlternators();
+        if (alternators.isEmpty()) {
             return;
         }
 
-        double extracted = grid.getEnergyService().extractAEPower(
-                Math.min(this.processingPowerRate, remaining),
-                Actionable.MODULATE,
-                PowerMultiplier.CONFIG
+        this.processingEnergy = Math.min(
+                this.processingEnergyTotal,
+                this.processingEnergy + (this.processingPowerRate * alternators.size())
         );
-        if (extracted <= 0) {
-            return;
+
+        for (var alternator : alternators) {
+            alternator.getEnergy().extractEnergy(this.processingPowerRate, false);
         }
 
-        this.processingEnergy = Math.min(this.processingEnergyTotal, this.processingEnergy + extracted);
         this.setChanged();
-        if (this.processingEnergy + 0.0001 >= this.processingEnergyTotal) {
+        if (this.processingEnergy >= this.processingEnergyTotal) {
             this.finishProcessing();
         }
+    }
+
+    private List<FluxAlternatorTileEntity> getAlternators() {
+        List<FluxAlternatorTileEntity> alternators = new ArrayList<>();
+        var level = this.getLevel();
+        if (level == null || this.processingPowerRate <= 0) {
+            return alternators;
+        }
+
+        var pos = this.getBlockPos();
+        BlockPos.betweenClosedStream(
+                pos.offset(-ALTERNATOR_SCAN_RADIUS, -ALTERNATOR_SCAN_RADIUS, -ALTERNATOR_SCAN_RADIUS),
+                pos.offset(ALTERNATOR_SCAN_RADIUS, ALTERNATOR_SCAN_RADIUS, ALTERNATOR_SCAN_RADIUS)
+        ).forEach(checkPos -> {
+            var tile = level.getBlockEntity(checkPos);
+            if (tile instanceof FluxAlternatorTileEntity alternator
+                    && alternator.getEnergy().getEnergyStored() >= this.processingPowerRate) {
+                alternators.add(alternator);
+            }
+        });
+
+        return alternators;
     }
 
     private void finishProcessing() {
