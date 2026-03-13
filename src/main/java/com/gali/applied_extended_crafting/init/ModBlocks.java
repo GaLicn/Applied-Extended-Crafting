@@ -2,6 +2,7 @@ package com.gali.applied_extended_crafting.init;
 
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
 import com.gali.applied_extended_crafting.block.EnderCrafterPatternProviderBlock;
+import com.gali.applied_extended_crafting.block.FluxCrafterPatternProviderBlock;
 import com.gali.applied_extended_crafting.block.TableAdvancedPatternProviderBlock;
 import com.gali.applied_extended_crafting.block.TableBasicPatternProviderBlock;
 import com.gali.applied_extended_crafting.block.TableElitePatternProviderBlock;
@@ -36,6 +37,11 @@ public final class ModBlocks {
     public static final DeferredBlock<EnderCrafterPatternProviderBlock> ENDER_CRAFTER_PATTERN_PROVIDER = BLOCKS.register(
             "ender_crafter_pattern_provider",
             EnderCrafterPatternProviderBlock::new
+    );
+
+    public static final DeferredBlock<FluxCrafterPatternProviderBlock> FLUX_CRAFTER_PATTERN_PROVIDER = BLOCKS.register(
+            "flux_crafter_pattern_provider",
+            FluxCrafterPatternProviderBlock::new
     );
 
     private ModBlocks() {

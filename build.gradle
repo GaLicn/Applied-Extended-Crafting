@@ -106,6 +106,7 @@ dependencies {
     implementation "curse.maven:extended-crafting-268387:7713533"
     implementation "curse.maven:cucumber-272335:7180790"
     implementation "curse.maven:ae2-jei-integration-1074338:5748513"
+    implementation "curse.maven:mekanism-268560:7621971"
 
     runtimeOnly "curse.maven:just-enough-characters-250702:7320033"
 }

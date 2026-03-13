@@ -38,6 +38,8 @@ final class ClientModEvents {
                 PatternProviderPowerLightRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
                 PatternProviderPowerLightRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.FLUX_CRAFTER_PATTERN_PROVIDER.get(),
+                PatternProviderPowerLightRenderer::new);
     }
 
     private void registerMenuScreens(RegisterMenuScreensEvent event) {

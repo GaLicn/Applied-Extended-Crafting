@@ -9,12 +9,12 @@
   },
   "slots": {
     "APPLIED_EXTENDED_CRAFTING_FLUX_PREVIEW_CRAFTING_GRID": {
-      "left": 35,
+      "left": 36,
       "top": 17,
       "grid": "BREAK_AFTER_3COLS"
     },
     "APPLIED_EXTENDED_CRAFTING_FLUX_PREVIEW_RESULT": {
-      "left": 129,
+      "left": 125,
       "top": 35
     },
     "ENCODED_PATTERN": {
@@ -24,12 +24,12 @@
     },
     "PLAYER_INVENTORY": {
       "left": 8,
-      "bottom": 82,
+      "bottom": 83,
       "grid": "BREAK_AFTER_9COLS"
     },
     "PLAYER_HOTBAR": {
       "left": 8,
-      "bottom": 24,
+      "bottom": 25,
       "grid": "HORIZONTAL"
     }
   },
