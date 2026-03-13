@@ -26,6 +26,9 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
     private static final int PROGRESS_HEIGHT = 15;
     private static final int PROGRESS_TEXTURE_X = 176;
     private static final int PROGRESS_TEXTURE_Y = 0;
+    private static final int EMPTY_PATTERN_SLOT_TEXTURE_X = 200;
+    private static final int EMPTY_PATTERN_SLOT_TEXTURE_Y = 0;
+    private static final int EMPTY_PATTERN_SLOT_SIZE = 16;
 
     private final EnderCrafterPatternProviderLockReason lockReason;
 
@@ -49,6 +52,7 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
     @Override
     public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
+        this.renderEmptyPatternSlotBackgrounds(guiGraphics, offsetX, offsetY);
 
         int progress = this.getProgressWidth();
         if (progress > 0) {
@@ -64,6 +68,24 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
         }
 
         this.renderSelectedPatternHighlight(guiGraphics, offsetX, offsetY);
+    }
+
+    private void renderEmptyPatternSlotBackgrounds(GuiGraphics guiGraphics, int offsetX, int offsetY) {
+        for (Slot slot : this.menu.getSlots(SlotSemantics.ENCODED_PATTERN)) {
+            if (!slot.getItem().isEmpty()) {
+                continue;
+            }
+
+            guiGraphics.blit(
+                    BACKGROUND,
+                    offsetX + slot.x,
+                    offsetY + slot.y,
+                    EMPTY_PATTERN_SLOT_TEXTURE_X,
+                    EMPTY_PATTERN_SLOT_TEXTURE_Y,
+                    EMPTY_PATTERN_SLOT_SIZE,
+                    EMPTY_PATTERN_SLOT_SIZE
+            );
+        }
     }
 
     @Override
