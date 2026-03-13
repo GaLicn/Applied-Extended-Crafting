@@ -69,10 +69,6 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
             return patternOutputs.isEmpty();
         }
 
-        if (patternOutputs.size() != 1) {
-            return false;
-        }
-
         var entry = patternOutputs.entrySet().iterator().next();
         if (!(entry.getKey() instanceof AEItemKey itemKey)) {
             return false;
@@ -114,7 +110,7 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
 
         return expanded;
     }
-
+    //TODO 将匹配算法改为先将List<Ingredient>转成Map<Set<Key>,count>然后跟输入的Map<AEKey, Long>比
     private boolean matchIngredients(List<Ingredient> ingredients, List<AEItemKey> inputs, boolean[] used, int ingredientIndex) {
         if (ingredientIndex >= ingredients.size()) {
             return true;
