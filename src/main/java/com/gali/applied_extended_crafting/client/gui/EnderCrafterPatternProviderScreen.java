@@ -5,7 +5,6 @@ import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
-import com.gali.applied_extended_crafting.blockentity.AbstractPatternProvider;
 import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -113,18 +112,11 @@ public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafter
     }
 
     private int getProgressWidth() {
-        var blockEntity = this.menu.getBlockEntity();
-        if (!(blockEntity instanceof AbstractPatternProvider patternProvider) || !patternProvider.isPowered()) {
+        if (!this.menu.isProcessing()) {
             return 0;
         }
 
-        var level = patternProvider.getLevel();
-        if (level == null) {
-            return 0;
-        }
-
-        long frame = (level.getGameTime() / 2L) % (PROGRESS_WIDTH + 1L);
-        return frame <= 0 ? PROGRESS_WIDTH : (int) frame;
+        return this.menu.getProcessingProgress();
     }
 
 }

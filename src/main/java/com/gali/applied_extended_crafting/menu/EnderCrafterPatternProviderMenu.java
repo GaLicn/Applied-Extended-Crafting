@@ -13,6 +13,7 @@ import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
 import appeng.util.ConfigInventory;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
+import com.gali.applied_extended_crafting.blockentity.EnderCrafterPatternProviderBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     private static final int PREVIEW_GRID_SIZE = 9;
+    private static final int PROCESS_BAR_WIDTH = 22;
     private static final String ACTION_SELECT_PATTERN_SLOT = "selectPatternSlot";
 
     public static final SlotSemantic PREVIEW_CRAFTING_GRID = SlotSemantics.register(
@@ -51,6 +53,10 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
 
     @GuiSync(100)
     public int selectedPatternSlot = -1;
+    @GuiSync(101)
+    public int processingProgress;
+    @GuiSync(102)
+    public boolean processing;
 
     public EnderCrafterPatternProviderMenu(MenuType<? extends EnderCrafterPatternProviderMenu> menuType, int id,
                                            Inventory playerInventory, PatternProviderLogicHost host) {
@@ -81,6 +87,7 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     @Override
     public void broadcastChanges() {
         if (this.isServerSide()) {
+            this.updateProcessingState();
             this.updatePreviewFromPattern();
         }
 
@@ -97,6 +104,14 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
 
     public int getSelectedPatternSlot() {
         return this.selectedPatternSlot;
+    }
+
+    public int getProcessingProgress() {
+        return this.processingProgress;
+    }
+
+    public boolean isProcessing() {
+        return this.processing;
     }
 
     private void setSelectedPatternSlotInternal(Integer slot) {
@@ -116,6 +131,13 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     private void updatePreviewFromPattern() {
         this.selectedPatternSlot = this.resolveSelectedPatternSlot();
         this.clearPreview();
+
+        var blockEntity = this.getBlockEntity();
+        if (blockEntity instanceof EnderCrafterPatternProviderBlockEntity patternProvider
+                && patternProvider.hasProcessingPreview()) {
+            this.updatePreviewFromProcessing(patternProvider);
+            return;
+        }
 
         if (this.selectedPatternSlot < 0) {
             return;
@@ -150,6 +172,36 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
                 break;
             }
         }
+    }
+
+    private void updatePreviewFromProcessing(EnderCrafterPatternProviderBlockEntity patternProvider) {
+        int previewIndex = 0;
+        for (var input : patternProvider.getDisplayedInputs()) {
+            if (previewIndex >= PREVIEW_GRID_SIZE) {
+                break;
+            }
+
+            if (AEItemKey.is(input.what())) {
+                this.previewGridInv.setStack(previewIndex++, new GenericStack(input.what(), Math.max(1, input.amount())));
+            }
+        }
+
+        var result = patternProvider.getDisplayedResult();
+        if (result != null && AEItemKey.is(result.what())) {
+            this.previewResultInv.setStack(0, new GenericStack(result.what(), Math.max(1, result.amount())));
+        }
+    }
+
+    private void updateProcessingState() {
+        var blockEntity = this.getBlockEntity();
+        if (blockEntity instanceof EnderCrafterPatternProviderBlockEntity patternProvider) {
+            this.processing = patternProvider.isProcessing();
+            this.processingProgress = patternProvider.getProcessingProgressScaled(PROCESS_BAR_WIDTH);
+            return;
+        }
+
+        this.processing = false;
+        this.processingProgress = 0;
     }
 
     private void clearPreview() {
