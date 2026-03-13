@@ -9,6 +9,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.PatternProviderMenu;
+import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
 import appeng.util.ConfigInventory;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
@@ -54,6 +55,12 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     public EnderCrafterPatternProviderMenu(MenuType<? extends EnderCrafterPatternProviderMenu> menuType, int id,
                                            Inventory playerInventory, PatternProviderLogicHost host) {
         super(menuType, id, playerInventory, host);
+
+        this.getSlots(SlotSemantics.ENCODED_PATTERN).forEach(slot -> {
+            if (slot instanceof AppEngSlot appEngSlot) {
+                appEngSlot.setIcon(null);
+            }
+        });
 
         var previewGrid = this.previewGridInv.createMenuWrapper();
         var previewResult = this.previewResultInv.createMenuWrapper();
