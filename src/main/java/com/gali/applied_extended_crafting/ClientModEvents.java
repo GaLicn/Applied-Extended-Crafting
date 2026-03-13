@@ -2,11 +2,13 @@ package com.gali.applied_extended_crafting;
 
 import appeng.client.gui.style.StyleManager;
 import com.gali.applied_extended_crafting.client.gui.EnderCrafterPatternProviderScreen;
+import com.gali.applied_extended_crafting.client.gui.FluxCrafterPatternProviderScreen;
 import com.gali.applied_extended_crafting.client.gui.TablePatternProviderScreen;
 import com.gali.applied_extended_crafting.client.render.PatternProviderPowerLightRenderer;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModMenuTypes;
 import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
+import com.gali.applied_extended_crafting.menu.FluxCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,6 +43,7 @@ final class ClientModEvents {
     private void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.TABLE_PATTERN_PROVIDER.get(), this::createTablePatternProviderScreen);
         event.register(ModMenuTypes.ENDER_CRAFTER_PATTERN_PROVIDER.get(), this::createEnderCrafterPatternProviderScreen);
+        event.register(ModMenuTypes.FLUX_CRAFTER_PATTERN_PROVIDER.get(), this::createFluxCrafterPatternProviderScreen);
     }
 
     private TablePatternProviderScreen createTablePatternProviderScreen(TablePatternProviderMenu menu,
@@ -62,6 +65,17 @@ final class ClientModEvents {
                 playerInventory,
                 title,
                 StyleManager.loadStyleDoc("/screens/ender_crafter_pattern_provider.json")
+        );
+    }
+
+    private FluxCrafterPatternProviderScreen createFluxCrafterPatternProviderScreen(FluxCrafterPatternProviderMenu menu,
+                                                                                    Inventory playerInventory,
+                                                                                    Component title) {
+        return new FluxCrafterPatternProviderScreen(
+                menu,
+                playerInventory,
+                title,
+                StyleManager.loadStyleDoc("/screens/flux_crafter_pattern_provider.json")
         );
     }
 }
