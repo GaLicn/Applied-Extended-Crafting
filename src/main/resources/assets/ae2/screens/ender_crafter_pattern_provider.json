@@ -1,0 +1,49 @@
+{
+  "$schema": "schema.json",
+  "includes": ["common/common.json", "common/player_inventory.json"],
+  "background": {
+    "texture": "applied_extended_crafting:screen/ender_crafter_pattern_provider.png",
+    "srcRect": [0, 0, 176, 186],
+    "textureWidth": 256,
+    "textureHeight": 256
+  },
+  "slots": {
+    "APPLIED_EXTENDED_CRAFTING_PREVIEW_CRAFTING_GRID": {
+      "left": 30,
+      "top": 18,
+      "grid": "BREAK_AFTER_3COLS"
+    },
+    "APPLIED_EXTENDED_CRAFTING_PREVIEW_RESULT": {
+      "left": 124,
+      "top": 35
+    },
+    "ENCODED_PATTERN": {
+      "left": 7,
+      "top": 78,
+      "grid": "HORIZONTAL"
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.ae2.CraftingInterface"
+      },
+      "position": {
+        "left": 30,
+        "top": 6
+      }
+    }
+  },
+  "widgets": {
+    "openPriority": {
+      "left": 152,
+      "top": -5,
+      "width": 20,
+      "height": 20
+    },
+    "lockReason": {
+      "left": 5,
+      "top": 15
+    }
+  }
+}

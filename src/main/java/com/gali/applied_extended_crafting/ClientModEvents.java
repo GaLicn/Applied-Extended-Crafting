@@ -1,15 +1,15 @@
 package com.gali.applied_extended_crafting;
 
 import appeng.client.gui.style.StyleManager;
+import com.gali.applied_extended_crafting.client.gui.EnderCrafterPatternProviderScreen;
 import com.gali.applied_extended_crafting.client.render.PatternProviderPowerLightRenderer;
-import com.gali.applied_extended_crafting.client.gui.TablePatternProviderScreen;
 import com.gali.applied_extended_crafting.blockentity.TableAdvancedPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableBasicPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableElitePatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableUltimatePatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModMenuTypes;
-import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
+import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.bus.api.IEventBus;
@@ -39,17 +39,17 @@ final class ClientModEvents {
     }
 
     private void registerMenuScreens(RegisterMenuScreensEvent event) {
-        event.register(ModMenuTypes.TABLE_PATTERN_PROVIDER.get(), this::createTablePatternProviderScreen);
+        event.register(ModMenuTypes.TABLE_PATTERN_PROVIDER.get(), this::createEnderCrafterPatternProviderScreen);
     }
 
-    private TablePatternProviderScreen createTablePatternProviderScreen(TablePatternProviderMenu menu,
-                                                                        Inventory playerInventory,
-                                                                        Component title) {
-        return new TablePatternProviderScreen(
+    private EnderCrafterPatternProviderScreen createEnderCrafterPatternProviderScreen(EnderCrafterPatternProviderMenu menu,
+                                                                                      Inventory playerInventory,
+                                                                                      Component title) {
+        return new EnderCrafterPatternProviderScreen(
                 menu,
                 playerInventory,
                 title,
-                StyleManager.loadStyleDoc("/screens/pattern_provider.json")
+                StyleManager.loadStyleDoc("/screens/ender_crafter_pattern_provider.json")
         );
     }
 }

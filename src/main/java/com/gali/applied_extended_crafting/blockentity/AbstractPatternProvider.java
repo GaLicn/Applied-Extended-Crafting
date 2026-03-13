@@ -20,7 +20,7 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.api.config.PowerMultiplier;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
-import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
+import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -90,12 +90,12 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
 
     @Override
     public void openMenu(Player player, MenuHostLocator locator) {
-        MenuOpener.open(TablePatternProviderMenu.TYPE, player, locator);
+        MenuOpener.open(EnderCrafterPatternProviderMenu.TYPE, player, locator);
     }
 
     @Override
     public void returnToMainMenu(Player player, ISubMenu subMenu) {
-        MenuOpener.returnTo(TablePatternProviderMenu.TYPE, player, subMenu.getLocator());
+        MenuOpener.returnTo(EnderCrafterPatternProviderMenu.TYPE, player, subMenu.getLocator());
     }
 
     @Override
