@@ -142,6 +142,7 @@ dependencies {
     implementation fg.deobf("curse.maven:jei-238222:7391695")
     implementation fg.deobf("curse.maven:applied-energistics-2-223794:7148487")
     implementation fg.deobf("curse.maven:extended-crafting-268387:6880322")
+    implementation fg.deobf("curse.maven:cucumber-272335:7180783")
     implementation fg.deobf("curse.maven:guideme-1173950:7127447")
     implementation fg.deobf("curse.maven:jade-324717:6855440")
 

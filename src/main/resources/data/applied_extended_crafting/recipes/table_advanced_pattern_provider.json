@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:gold_ingot"
     },
     "B": {
       "item": "ae2:quartz_glass"
@@ -16,13 +16,13 @@
       "item": "ae2:annihilation_core"
     },
     "D": {
-      "item": "extendedcrafting:basic_auto_table"
+      "item": "extendedcrafting:advanced_auto_table"
     },
     "E": {
       "item": "ae2:formation_core"
     }
   },
   "result": {
-    "id": "applied_extended_crafting:table_basic_pattern_provider"
+    "item": "applied_extended_crafting:table_advanced_pattern_provider"
   }
 }
