@@ -1,6 +1,5 @@
 package com.gali.applied_extended_crafting.menu;
 
-import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
@@ -129,48 +128,17 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     }
 
     private void updatePreviewFromPattern() {
-        this.selectedPatternSlot = this.resolveSelectedPatternSlot();
+        if (!this.isPatternSlotIndexValid(this.selectedPatternSlot)
+                || this.logic.getPatternInv().getStackInSlot(this.selectedPatternSlot).isEmpty()) {
+            this.selectedPatternSlot = -1;
+        }
+
         this.clearPreview();
 
         var blockEntity = this.getBlockEntity();
         if (blockEntity instanceof EnderCrafterPatternProviderBlockEntity patternProvider
                 && patternProvider.hasProcessingPreview()) {
             this.updatePreviewFromProcessing(patternProvider);
-            return;
-        }
-
-        if (this.selectedPatternSlot < 0) {
-            return;
-        }
-
-        var patternStack = this.logic.getPatternInv().getStackInSlot(this.selectedPatternSlot);
-        if (patternStack.isEmpty()) {
-            return;
-        }
-
-        var details = PatternDetailsHelper.decodePattern(patternStack, this.getPlayer().level());
-        if (details == null) {
-            return;
-        }
-
-        var inputs = details.getInputs();
-        for (int i = 0; i < Math.min(inputs.length, PREVIEW_GRID_SIZE); i++) {
-            var possibleInputs = inputs[i].getPossibleInputs();
-            if (possibleInputs.length == 0) {
-                continue;
-            }
-
-            var previewStack = possibleInputs[0];
-            if (AEItemKey.is(previewStack.what())) {
-                this.previewGridInv.setStack(i, new GenericStack(previewStack.what(), Math.max(1, previewStack.amount())));
-            }
-        }
-
-        for (var output : details.getOutputs()) {
-            if (AEItemKey.is(output.what())) {
-                this.previewResultInv.setStack(0, new GenericStack(output.what(), Math.max(1, output.amount())));
-                break;
-            }
         }
     }
 
@@ -207,21 +175,6 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
     private void clearPreview() {
         this.previewGridInv.clear();
         this.previewResultInv.clear();
-    }
-
-    private int resolveSelectedPatternSlot() {
-        if (this.isPatternSlotIndexValid(this.selectedPatternSlot)
-                && !this.logic.getPatternInv().getStackInSlot(this.selectedPatternSlot).isEmpty()) {
-            return this.selectedPatternSlot;
-        }
-
-        for (int i = 0; i < Math.min(PREVIEW_GRID_SIZE, this.logic.getPatternInv().size()); i++) {
-            if (!this.logic.getPatternInv().getStackInSlot(i).isEmpty()) {
-                return i;
-            }
-        }
-
-        return -1;
     }
 
     private boolean isPatternSlotIndexValid(int slot) {
