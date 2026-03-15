@@ -30,6 +30,10 @@ public class CrafterCorePatternProviderScreen extends PatternProviderScreen<Craf
     private static final int OUTPUT_SLOT_Y = 71;
     private static final int PEDESTAL_SLOT_X = 172;
     private static final int PEDESTAL_SLOT_Y = 101;
+    private static final int UPGRADE_GRID_LEFT = 170;
+    private static final int UPGRADE_GRID_TOP = 18;
+    private static final int UPGRADE_GRID_COLUMNS = 3;
+    private static final int UPGRADE_SLOT_SPACING = 21;
 
     private static final int PROGRESS_X = 167;
     private static final int PROGRESS_Y = 71;
@@ -64,6 +68,7 @@ public class CrafterCorePatternProviderScreen extends PatternProviderScreen<Craf
                 OUTPUT_SLOT_Y);
         this.positionSingleSlot(this.menu.getSlots(CrafterCorePatternProviderMenu.PEDESTAL), PEDESTAL_SLOT_X,
                 PEDESTAL_SLOT_Y);
+        this.positionUpgradeSlots();
     }
 
     @Override
@@ -106,6 +111,17 @@ public class CrafterCorePatternProviderScreen extends PatternProviderScreen<Craf
         }
 
         this.setSlotPosition(slots.get(0), x, y);
+    }
+
+    private void positionUpgradeSlots() {
+        var upgradeSlots = this.menu.getSlots(SlotSemantics.UPGRADE);
+        for (int i = 0; i < upgradeSlots.size(); i++) {
+            this.setSlotPosition(
+                    upgradeSlots.get(i),
+                    UPGRADE_GRID_LEFT + (i % UPGRADE_GRID_COLUMNS) * UPGRADE_SLOT_SPACING,
+                    UPGRADE_GRID_TOP + (i / UPGRADE_GRID_COLUMNS) * UPGRADE_SLOT_SPACING
+            );
+        }
     }
 
     private void renderLockedPreviewSlotBackgrounds(GuiGraphics guiGraphics, int offsetX, int offsetY) {

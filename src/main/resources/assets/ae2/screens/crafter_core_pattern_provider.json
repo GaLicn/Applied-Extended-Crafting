@@ -29,18 +29,23 @@
       "left": 174,
       "top": 103
     },
+    "UPGRADE": {
+      "left": 170,
+      "top": 18,
+      "grid": "BREAK_AFTER_3COLS"
+    },
     "ENCODED_PATTERN": {
       "left": 9,
       "top": 35,
       "grid": "VERTICAL"
     },
     "PLAYER_INVENTORY": {
-      "left": 36,
+      "left": 37,
       "top": 156,
       "grid": "BREAK_AFTER_9COLS"
     },
     "PLAYER_HOTBAR": {
-      "left": 36,
+      "left": 37,
       "top": 214,
       "grid": "HORIZONTAL"
     }

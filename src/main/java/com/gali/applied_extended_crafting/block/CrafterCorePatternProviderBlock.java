@@ -63,6 +63,14 @@ public class CrafterCorePatternProviderBlock extends PatternProviderBlock {
                 if (!pedestalStack.isEmpty()) {
                     Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), pedestalStack);
                 }
+
+                var upgradeInventory = patternProvider.getUpgradeInventory();
+                for (int i = 0; i < upgradeInventory.size(); i++) {
+                    var upgradeStack = upgradeInventory.getStackInSlot(i);
+                    if (!upgradeStack.isEmpty()) {
+                        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), upgradeStack);
+                    }
+                }
             }
         }
 
