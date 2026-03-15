@@ -1,6 +1,8 @@
 package com.gali.applied_extended_crafting.init;
 
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
+import com.gali.applied_extended_crafting.blockentity.EnderCrafterPatternProviderBlockEntity;
+import com.gali.applied_extended_crafting.blockentity.FluxCrafterPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableAdvancedPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableBasicPatternProviderBlockEntity;
 import com.gali.applied_extended_crafting.blockentity.TableElitePatternProviderBlockEntity;
@@ -41,6 +43,20 @@ public final class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(
                             TableUltimatePatternProviderBlockEntity::new,
                             ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER.get()
+                    ).build(null));
+
+    public static final RegistryObject<BlockEntityType<EnderCrafterPatternProviderBlockEntity>> ENDER_CRAFTER_PATTERN_PROVIDER =
+            BLOCK_ENTITIES.register("ender_crafter_pattern_provider",
+                    () -> BlockEntityType.Builder.of(
+                            EnderCrafterPatternProviderBlockEntity::new,
+                            ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER.get()
+                    ).build(null));
+
+    public static final RegistryObject<BlockEntityType<FluxCrafterPatternProviderBlockEntity>> FLUX_CRAFTER_PATTERN_PROVIDER =
+            BLOCK_ENTITIES.register("flux_crafter_pattern_provider",
+                    () -> BlockEntityType.Builder.of(
+                            FluxCrafterPatternProviderBlockEntity::new,
+                            ModBlocks.FLUX_CRAFTER_PATTERN_PROVIDER.get()
                     ).build(null));
 
     private ModBlockEntities() {

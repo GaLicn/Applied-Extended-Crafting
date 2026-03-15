@@ -46,5 +46,9 @@ final class ClientModEvents {
                 PatternProviderPowerLightRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.TABLE_ULTIMATE_PATTERN_PROVIDER.get(),
                 PatternProviderPowerLightRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
+                PatternProviderPowerLightRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.FLUX_CRAFTER_PATTERN_PROVIDER.get(),
+                PatternProviderPowerLightRenderer::new);
     }
 }

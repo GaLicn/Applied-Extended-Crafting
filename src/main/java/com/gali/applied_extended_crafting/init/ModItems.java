@@ -34,6 +34,16 @@ public final class ModItems {
             () -> new BlockItem(ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER.get(), new Item.Properties())
     );
 
+    public static final RegistryObject<BlockItem> ENDER_CRAFTER_PATTERN_PROVIDER = ITEMS.register(
+            "ender_crafter_pattern_provider",
+            () -> new BlockItem(ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER.get(), new Item.Properties())
+    );
+
+    public static final RegistryObject<BlockItem> FLUX_CRAFTER_PATTERN_PROVIDER = ITEMS.register(
+            "flux_crafter_pattern_provider",
+            () -> new BlockItem(ModBlocks.FLUX_CRAFTER_PATTERN_PROVIDER.get(), new Item.Properties())
+    );
+
     private ModItems() {
     }
 

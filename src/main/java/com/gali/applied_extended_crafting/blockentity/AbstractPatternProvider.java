@@ -11,6 +11,7 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
+import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.menu.ISubMenu;
@@ -146,10 +147,26 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
             return false;
         }
 
-        this.pendingOutputs.addAll(Arrays.asList(patternDetails.getOutputs()));
-        this.saveChanges();
+        this.enqueueOutputs(Arrays.asList(patternDetails.getOutputs()));
 
         return true;
+    }
+
+    protected void enqueueOutputs(List<GenericStack> outputs) {
+        if (outputs.isEmpty()) {
+            return;
+        }
+
+        this.pendingOutputs.addAll(outputs);
+        this.saveChanges();
+    }
+
+    protected boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputHolder) {
+        return this.pushPatternToNetwork(patternDetails);
+    }
+
+    protected boolean isBusyForPush() {
+        return false;
     }
 
     @Override
@@ -318,13 +335,13 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
         }
 
         @Override
-        public boolean pushPattern(IPatternDetails patternDetails, appeng.api.stacks.KeyCounter[] inputHolder) {
-            return AbstractPatternProvider.this.pushPatternToNetwork(patternDetails);
+        public boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputHolder) {
+            return AbstractPatternProvider.this.pushPattern(patternDetails, inputHolder);
         }
 
         @Override
         public boolean isBusy() {
-            return false;
+            return AbstractPatternProvider.this.isBusyForPush();
         }
     }
 }
