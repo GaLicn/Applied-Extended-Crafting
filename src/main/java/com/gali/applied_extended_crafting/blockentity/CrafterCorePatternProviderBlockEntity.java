@@ -6,6 +6,9 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.UpgradeInventories;
+import appeng.core.definitions.AEItems;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
@@ -34,7 +37,10 @@ import java.util.Map;
 
 public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvider
         implements CrafterCorePatternProviderMenuHost {
+    private static final int UPGRADE_SLOT_COUNT = 6;
+    private static final int[] PROCESSING_DURATION_BY_SPEED_CARDS = { 200, 120, 72, 40, 20, 5, 1 };
     private static final String NBT_PEDESTAL_STACK = "pedestalStack";
+    private static final String NBT_UPGRADES = "upgrades";
     private static final String NBT_PROCESSING_CENTER_INPUT = "processingCenterInput";
     private static final String NBT_PROCESSING_PEDESTAL_INPUTS = "processingPedestalInputs";
     private static final String NBT_PROCESSING_OUTPUTS = "processingOutputs";
@@ -45,6 +51,11 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
 
     private final CombinationRecipeMatcher recipeMatcher = new CombinationRecipeMatcher();
     private final AppEngInternalInventory pedestalInventory = new AppEngInternalInventory(this, 1, 64);
+    private final IUpgradeInventory upgradeInventory = UpgradeInventories.forMachine(
+            com.gali.applied_extended_crafting.init.ModBlocks.CRAFTER_CORE_PATTERN_PROVIDER.get(),
+            UPGRADE_SLOT_COUNT,
+            this::onUpgradesChanged
+    );
     private final List<GenericStack> processingPedestalInputs = new ArrayList<>();
     private final List<GenericStack> processingOutputs = new ArrayList<>();
 
@@ -126,7 +137,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
         this.processingOutputs.addAll(outputs);
         this.processingProgress = 0;
         this.processingPowerTotal = powerTotal;
-        this.processingPowerRate = powerRate;
+        this.processingPowerRate = this.getEffectivePowerRate(powerTotal);
         this.processingRequiredPedestals = requiredPedestals;
         this.saveChanges();
         return true;
@@ -151,6 +162,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
     public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
         super.saveAdditional(data, registries);
         this.pedestalInventory.writeToNBT(data, NBT_PEDESTAL_STACK, registries);
+        this.upgradeInventory.writeToNBT(data, NBT_UPGRADES, registries);
 
         if (this.processingCenterInput != null) {
             data.put(NBT_PROCESSING_CENTER_INPUT, GenericStack.writeTag(registries, this.processingCenterInput));
@@ -177,6 +189,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
         this.pedestalInventory.readFromNBT(data, NBT_PEDESTAL_STACK, registries);
+        this.upgradeInventory.readFromNBT(data, NBT_UPGRADES, registries);
 
         this.processingCenterInput = data.contains(NBT_PROCESSING_CENTER_INPUT, Tag.TAG_COMPOUND)
                 ? GenericStack.readTag(registries, data.getCompound(NBT_PROCESSING_CENTER_INPUT))
@@ -213,6 +226,11 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
     @Override
     public AppEngInternalInventory getPedestalInventory() {
         return this.pedestalInventory;
+    }
+
+    @Override
+    public IUpgradeInventory getUpgradeInventory() {
+        return this.upgradeInventory;
     }
 
     @Override
@@ -285,6 +303,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
             return;
         }
 
+        this.processingPowerRate = this.getEffectivePowerRate(this.processingPowerTotal);
         double remaining = this.processingPowerTotal - this.processingProgress;
         if (remaining <= 0) {
             this.finishProcessing();
@@ -414,6 +433,30 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
 
     private boolean isPedestalStack(ItemStack stack) {
         return !stack.isEmpty() && stack.is(ModBlocks.PEDESTAL.get().asItem());
+    }
+
+    private int getEffectivePowerRate(int totalPower) {
+        int duration = this.getProcessingDurationTicks();
+        if (duration <= 1) {
+            return Math.max(1, totalPower);
+        }
+
+        return Math.max(1, (int) Math.ceil(totalPower / (double) duration));
+    }
+
+    private int getProcessingDurationTicks() {
+        int speedCards = this.upgradeInventory.getInstalledUpgrades(AEItems.SPEED_CARD);
+        if (speedCards < 0) {
+            speedCards = 0;
+        } else if (speedCards >= PROCESSING_DURATION_BY_SPEED_CARDS.length) {
+            speedCards = PROCESSING_DURATION_BY_SPEED_CARDS.length - 1;
+        }
+
+        return PROCESSING_DURATION_BY_SPEED_CARDS[speedCards];
+    }
+
+    private void onUpgradesChanged() {
+        this.saveChanges();
     }
 
     private void clearProcessingState() {

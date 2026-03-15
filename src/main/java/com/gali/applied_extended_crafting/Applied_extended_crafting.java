@@ -1,5 +1,7 @@
 package com.gali.applied_extended_crafting;
 
+import appeng.api.upgrades.Upgrades;
+import appeng.core.definitions.AEItems;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModBlocks;
 import com.gali.applied_extended_crafting.init.ModCapabilities;
@@ -39,6 +41,7 @@ public class Applied_extended_crafting {
             ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.CRAFTER_CORE_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.FLUX_CRAFTER_PATTERN_PROVIDER.get().initializeBlockEntity();
+            Upgrades.add(AEItems.SPEED_CARD, ModBlocks.CRAFTER_CORE_PATTERN_PROVIDER.get(), 6);
         });
     }
 }

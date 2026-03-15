@@ -10,6 +10,7 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.implementations.PatternProviderMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
+import appeng.menu.slot.RestrictedInputSlot;
 import appeng.util.ConfigInventory;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
 import com.gali.applied_extended_crafting.blockentity.CrafterCorePatternProviderMenuHost;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 
 public class CrafterCorePatternProviderMenu extends PatternProviderMenu {
     private static final int PATTERN_SLOT_COUNT = 9;
+    private static final int UPGRADE_SLOT_COUNT = 6;
     private static final int PREVIEW_GRID_COLUMNS = 7;
     private static final int PREVIEW_GRID_SIZE = PREVIEW_GRID_COLUMNS * PREVIEW_GRID_COLUMNS;
     private static final int CENTER_SLOT_INDEX = PREVIEW_GRID_SIZE / 2;
@@ -101,9 +103,25 @@ public class CrafterCorePatternProviderMenu extends PatternProviderMenu {
 
         if (host instanceof CrafterCorePatternProviderMenuHost patternProviderHost) {
             this.addSlot(new AppEngSlot(patternProviderHost.getPedestalInventory(), 0), PEDESTAL);
+            for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+                this.addSlot(new RestrictedInputSlot(
+                        RestrictedInputSlot.PlacableItemType.UPGRADES,
+                        patternProviderHost.getUpgradeInventory(),
+                        i
+                ).setStackLimit(1), SlotSemantics.UPGRADE);
+            }
         } else {
             var pedestal = ConfigInventory.configStacks(1).allowOverstacking(true).build().createMenuWrapper();
+            var upgrades = ConfigInventory.configStacks(UPGRADE_SLOT_COUNT).allowOverstacking(true).build()
+                    .createMenuWrapper();
             this.addSlot(new FakeSlot(pedestal, 0), PEDESTAL);
+            for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+                this.addSlot(new RestrictedInputSlot(
+                        RestrictedInputSlot.PlacableItemType.UPGRADES,
+                        upgrades,
+                        i
+                ).setStackLimit(1), SlotSemantics.UPGRADE);
+            }
         }
 
         this.registerClientAction(ACTION_SELECT_PATTERN_SLOT, Integer.class, this::setSelectedPatternSlotInternal);

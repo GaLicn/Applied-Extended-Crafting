@@ -18,14 +18,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CrafterCorePatternProviderBlock extends PatternProviderBlock {
-    private static final VoxelShape SHAPE = Shapes.or(
-            Block.box(2, 0, 2, 14, 2, 14),
-            Block.box(0, 2, 0, 16, 5, 16),
-            Block.box(1, 5, 1, 15, 6, 15),
-            Block.box(0, 6, 0, 16, 12, 16),
-            Block.box(1, 12, 1, 15, 13, 15),
-            Block.box(0, 13, 0, 16, 16, 16)
-    );
 
     private boolean initialized = false;
 
@@ -72,15 +64,18 @@ public class CrafterCorePatternProviderBlock extends PatternProviderBlock {
                 if (!pedestalStack.isEmpty()) {
                     Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), pedestalStack);
                 }
+
+                var upgradeInventory = patternProvider.getUpgradeInventory();
+                for (int i = 0; i < upgradeInventory.size(); i++) {
+                    var upgradeStack = upgradeInventory.getStackInSlot(i);
+                    if (!upgradeStack.isEmpty()) {
+                        Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), upgradeStack);
+                    }
+                }
             }
         }
 
         super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
     }
 
     @Override
