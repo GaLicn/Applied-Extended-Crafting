@@ -1,0 +1,77 @@
+{
+  "$schema": "schema.json",
+  "includes": [
+    "common/common.json",
+    "common/player_inventory.json"
+  ],
+  "background": {
+    "texture": "applied_extended_crafting:textures/gui/crafter_core_pattern_provider.png",
+    "srcRect": [
+      0,
+      0,
+      234,
+      238
+    ],
+    "textureWidth": 256,
+    "textureHeight": 256
+  },
+  "slots": {
+    "APPLIED_EXTENDED_CRAFTING_CRAFTER_CORE_PREVIEW_CRAFTING_GRID": {
+      "left": 36,
+      "top": 16,
+      "grid": "HORIZONTAL"
+    },
+    "APPLIED_EXTENDED_CRAFTING_CRAFTER_CORE_PREVIEW_RESULT": {
+      "left": 199,
+      "top": 71
+    },
+    "APPLIED_EXTENDED_CRAFTING_CRAFTER_CORE_PEDESTAL": {
+      "left": 174,
+      "top": 103
+    },
+    "ENCODED_PATTERN": {
+      "left": 9,
+      "top": 35,
+      "grid": "VERTICAL"
+    },
+    "PLAYER_INVENTORY": {
+      "left": 36,
+      "top": 156,
+      "grid": "BREAK_AFTER_9COLS"
+    },
+    "PLAYER_HOTBAR": {
+      "left": 36,
+      "top": 214,
+      "grid": "HORIZONTAL"
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "gui.ae2.CraftingInterface"
+      },
+      "position": {
+        "left": 36,
+        "top": 6
+      }
+    },
+    "player_inventory_title": {
+      "position": {
+        "left": 36,
+        "top": 146
+      }
+    }
+  },
+  "widgets": {
+    "openPriority": {
+      "left": 210,
+      "top": -5,
+      "width": 20,
+      "height": 20
+    },
+    "lockReason": {
+      "left": 72,
+      "top": -5
+    }
+  }
+}

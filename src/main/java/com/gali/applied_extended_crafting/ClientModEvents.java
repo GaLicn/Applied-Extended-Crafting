@@ -1,12 +1,14 @@
 package com.gali.applied_extended_crafting;
 
 import appeng.client.gui.style.StyleManager;
+import com.gali.applied_extended_crafting.client.gui.CrafterCorePatternProviderScreen;
 import com.gali.applied_extended_crafting.client.gui.EnderCrafterPatternProviderScreen;
 import com.gali.applied_extended_crafting.client.gui.FluxCrafterPatternProviderScreen;
 import com.gali.applied_extended_crafting.client.gui.TablePatternProviderScreen;
 import com.gali.applied_extended_crafting.client.render.PatternProviderPowerLightRenderer;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
 import com.gali.applied_extended_crafting.init.ModMenuTypes;
+import com.gali.applied_extended_crafting.menu.CrafterCorePatternProviderMenu;
 import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.menu.FluxCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
@@ -28,6 +30,8 @@ final class ClientModEvents {
             MenuScreens.register(ModMenuTypes.TABLE_PATTERN_PROVIDER.get(), this::createTablePatternProviderScreen);
             MenuScreens.register(ModMenuTypes.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
                     this::createEnderCrafterPatternProviderScreen);
+            MenuScreens.register(ModMenuTypes.CRAFTER_CORE_PATTERN_PROVIDER.get(),
+                    this::createCrafterCorePatternProviderScreen);
             MenuScreens.register(ModMenuTypes.FLUX_CRAFTER_PATTERN_PROVIDER.get(),
                     this::createFluxCrafterPatternProviderScreen);
         });
@@ -55,6 +59,17 @@ final class ClientModEvents {
         );
     }
 
+    private CrafterCorePatternProviderScreen createCrafterCorePatternProviderScreen(CrafterCorePatternProviderMenu menu,
+                                                                                    Inventory playerInventory,
+                                                                                    Component title) {
+        return new CrafterCorePatternProviderScreen(
+                menu,
+                playerInventory,
+                title,
+                StyleManager.loadStyleDoc("/screens/crafter_core_pattern_provider.json")
+        );
+    }
+
     private FluxCrafterPatternProviderScreen createFluxCrafterPatternProviderScreen(FluxCrafterPatternProviderMenu menu,
                                                                                     Inventory playerInventory,
                                                                                     Component title) {
@@ -76,6 +91,8 @@ final class ClientModEvents {
         event.registerBlockEntityRenderer(ModBlockEntities.TABLE_ULTIMATE_PATTERN_PROVIDER.get(),
                 PatternProviderPowerLightRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
+                PatternProviderPowerLightRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CRAFTER_CORE_PATTERN_PROVIDER.get(),
                 PatternProviderPowerLightRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.FLUX_CRAFTER_PATTERN_PROVIDER.get(),
                 PatternProviderPowerLightRenderer::new);

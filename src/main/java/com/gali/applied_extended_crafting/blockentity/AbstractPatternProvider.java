@@ -3,6 +3,7 @@ package com.gali.applied_extended_crafting.blockentity;
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
+import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.IGridNodeListener;
@@ -20,6 +21,7 @@ import appeng.menu.locator.MenuLocator;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.api.config.PowerMultiplier;
 import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
@@ -44,7 +46,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
-        implements IActionHost, ServerTickingBlockEntity {
+        implements IActionHost, ServerTickingBlockEntity, InternalInventoryHost {
     private static final String NBT_PENDING_OUTPUTS = "pendingOutputs";
     private static final String NBT_POWERED = "powered";
 
@@ -102,6 +104,10 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     @Override
     public AEItemKey getTerminalIcon() {
         return AEItemKey.of(this.getMainMenuIcon());
+    }
+
+    @Override
+    public void onChangeInventory(InternalInventory inv, int slot) {
     }
 
     @Override
