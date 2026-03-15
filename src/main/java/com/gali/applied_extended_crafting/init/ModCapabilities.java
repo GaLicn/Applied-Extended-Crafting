@@ -38,5 +38,15 @@ public final class ModCapabilities {
                 ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(),
                 (blockEntity, context) -> blockEntity
         );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.CRAFTER_CORE_PATTERN_PROVIDER.get(),
+                (blockEntity, context) -> blockEntity
+        );
+        event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.FLUX_CRAFTER_PATTERN_PROVIDER.get(),
+                (blockEntity, context) -> blockEntity
+        );
     }
 }

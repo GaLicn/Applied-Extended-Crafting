@@ -37,6 +37,7 @@ public class Applied_extended_crafting {
             ModBlocks.TABLE_ELITE_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.TABLE_ULTIMATE_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER.get().initializeBlockEntity();
+            ModBlocks.CRAFTER_CORE_PATTERN_PROVIDER.get().initializeBlockEntity();
             ModBlocks.FLUX_CRAFTER_PATTERN_PROVIDER.get().initializeBlockEntity();
         });
     }

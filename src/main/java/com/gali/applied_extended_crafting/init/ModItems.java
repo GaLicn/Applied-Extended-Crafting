@@ -29,6 +29,10 @@ public final class ModItems {
             ModBlocks.ENDER_CRAFTER_PATTERN_PROVIDER
     );
 
+    public static final DeferredItem<BlockItem> CRAFTER_CORE_PATTERN_PROVIDER = ITEMS.registerSimpleBlockItem(
+            ModBlocks.CRAFTER_CORE_PATTERN_PROVIDER
+    );
+
     public static final DeferredItem<BlockItem> FLUX_CRAFTER_PATTERN_PROVIDER = ITEMS.registerSimpleBlockItem(
             ModBlocks.FLUX_CRAFTER_PATTERN_PROVIDER
     );

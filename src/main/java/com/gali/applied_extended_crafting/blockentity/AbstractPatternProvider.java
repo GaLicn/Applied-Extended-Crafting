@@ -20,6 +20,7 @@ import appeng.menu.locator.MenuHostLocator;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.api.config.PowerMultiplier;
 import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
@@ -44,7 +45,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
-        implements IActionHost, ServerTickingBlockEntity {
+        implements IActionHost, ServerTickingBlockEntity, InternalInventoryHost {
     private static final String NBT_PENDING_OUTPUTS = "pendingOutputs";
     private static final String NBT_POWERED = "powered";
 
@@ -288,6 +289,11 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
 
     public boolean isPowered() {
         return this.powered;
+    }
+
+    @Override
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        this.saveChanges();
     }
 
     private void updatePowerState(boolean syncToClient) {
