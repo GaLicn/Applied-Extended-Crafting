@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": {"model":"extendedcrafting:block/flux_crafter"}
+    "": {"model":"applied_extended_crafting:block/flux_crafter_pattern_provider"}
   }
 }

@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": {"model":"extendedcrafting:block/ender_crafter"}
+    "": {"model":"applied_extended_crafting:block/ender_crafter_pattern_provider"}
   }
 }
