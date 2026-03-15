@@ -1,6 +1,8 @@
 package com.gali.applied_extended_crafting.init;
 
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
+import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
+import com.gali.applied_extended_crafting.menu.FluxCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.menu.TablePatternProviderMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -16,6 +18,12 @@ public final class ModMenuTypes {
 
     public static final RegistryObject<MenuType<TablePatternProviderMenu>> TABLE_PATTERN_PROVIDER =
             MENU_TYPES.register("table_pattern_provider", () -> TablePatternProviderMenu.TYPE);
+
+    public static final RegistryObject<MenuType<EnderCrafterPatternProviderMenu>> ENDER_CRAFTER_PATTERN_PROVIDER =
+            MENU_TYPES.register("ender_crafter_pattern_provider", () -> EnderCrafterPatternProviderMenu.TYPE);
+
+    public static final RegistryObject<MenuType<FluxCrafterPatternProviderMenu>> FLUX_CRAFTER_PATTERN_PROVIDER =
+            MENU_TYPES.register("flux_crafter_pattern_provider", () -> FluxCrafterPatternProviderMenu.TYPE);
 
     private ModMenuTypes() {
     }

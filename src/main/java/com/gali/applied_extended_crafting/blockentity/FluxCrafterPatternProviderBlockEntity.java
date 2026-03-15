@@ -4,14 +4,19 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
+import appeng.menu.ISubMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuLocator;
 import com.blakebr0.extendedcrafting.tileentity.FluxAlternatorTileEntity;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
+import com.gali.applied_extended_crafting.menu.FluxCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.FluxCrafterRecipeMatcher;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvider {
+public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvider
+        implements FluxCrafterPatternProviderMenuHost {
     private static final int ALTERNATOR_SCAN_RADIUS = 3;
     private static final String NBT_PROCESSING_INPUTS = "processingInputs";
     private static final String NBT_PROCESSING_OUTPUTS = "processingOutputs";
@@ -37,6 +43,16 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
 
     public FluxCrafterPatternProviderBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FLUX_CRAFTER_PATTERN_PROVIDER.get(), pos, state);
+    }
+
+    @Override
+    public void openMenu(Player player, MenuLocator locator) {
+        MenuOpener.open(FluxCrafterPatternProviderMenu.TYPE, player, locator);
+    }
+
+    @Override
+    public void returnToMainMenu(Player player, ISubMenu subMenu) {
+        MenuOpener.returnTo(FluxCrafterPatternProviderMenu.TYPE, player, subMenu.getLocator());
     }
 
     @Override
@@ -158,10 +174,12 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
         }
     }
 
+    @Override
     public boolean isProcessing() {
         return this.processingEnergyTotal > 0 && this.processingPowerRate > 0 && !this.processingOutputs.isEmpty();
     }
 
+    @Override
     public int getProcessingProgressScaled(int width) {
         if (!this.isProcessing() || width <= 0) {
             return 0;
@@ -170,14 +188,17 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
         return Math.min(width, this.processingEnergy * width / this.processingEnergyTotal);
     }
 
+    @Override
     public boolean hasProcessingPreview() {
         return this.isProcessing() && (!this.processingInputs.isEmpty() || this.getDisplayedResult() != null);
     }
 
+    @Override
     public List<GenericStack> getDisplayedInputs() {
         return List.copyOf(this.processingInputs);
     }
 
+    @Override
     @Nullable
     public GenericStack getDisplayedResult() {
         for (var output : this.processingOutputs) {
@@ -189,10 +210,12 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
         return null;
     }
 
+    @Override
     public int getMenuEnergyStored() {
         return this.processingEnergy;
     }
 
+    @Override
     public int getMenuEnergyCapacity() {
         return this.processingEnergyTotal;
     }

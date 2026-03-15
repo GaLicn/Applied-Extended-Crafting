@@ -4,15 +4,20 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
+import appeng.menu.ISubMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuLocator;
 import com.blakebr0.extendedcrafting.block.EnderAlternatorBlock;
 import com.blakebr0.extendedcrafting.config.ModConfigs;
 import com.gali.applied_extended_crafting.init.ModBlockEntities;
+import com.gali.applied_extended_crafting.menu.EnderCrafterPatternProviderMenu;
 import com.gali.applied_extended_crafting.recipe.EnderCrafterRecipeMatcher;
 import com.gali.applied_extended_crafting.recipe.IRecipeMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +42,16 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
 
     public EnderCrafterPatternProviderBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ENDER_CRAFTER_PATTERN_PROVIDER.get(), pos, state);
+    }
+
+    @Override
+    public void openMenu(Player player, MenuLocator locator) {
+        MenuOpener.open(EnderCrafterPatternProviderMenu.TYPE, player, locator);
+    }
+
+    @Override
+    public void returnToMainMenu(Player player, ISubMenu subMenu) {
+        MenuOpener.returnTo(EnderCrafterPatternProviderMenu.TYPE, player, subMenu.getLocator());
     }
 
     @Override
