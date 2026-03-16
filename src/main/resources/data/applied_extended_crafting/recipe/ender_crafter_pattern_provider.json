@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "CDE",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "item": "extendedcrafting:enhanced_ender_ingot"
+    },
+    "B": {
+      "item": "extendedcrafting:ender_star"
+    },
+    "C": {
+      "item": "ae2:annihilation_core"
+    },
+    "D": {
+      "item": "extendedcrafting:auto_ender_crafter"
+    },
+    "E": {
+      "item": "ae2:formation_core"
+    }
+  },
+  "result": {
+    "id": "applied_extended_crafting:ender_crafter_pattern_provider"
+  }
+}

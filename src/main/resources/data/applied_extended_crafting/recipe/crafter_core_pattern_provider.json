@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "CDC",
+    "AEA"
+  ],
+  "key": {
+    "A": {
+      "item": "extendedcrafting:crystaltine_ingot"
+    },
+    "B": {
+      "item": "extendedcrafting:crystaltine_catalyst"
+    },
+    "C": {
+      "item": "extendedcrafting:crystaltine_component"
+    },
+    "D": {
+      "item": "extendedcrafting:crafting_core"
+    },
+    "E": {
+      "item": "ae2:molecular_assembler"
+    }
+  },
+  "result": {
+    "id": "applied_extended_crafting:crafter_core_pattern_provider"
+  }
+}
