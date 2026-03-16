@@ -1,6 +1,7 @@
 package com.gali.applied_extended_crafting.client.gui;
 
-import appeng.client.gui.implementations.PatternProviderScreen;
+import appeng.api.config.LockCraftingMode;
+import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
@@ -13,7 +14,7 @@ import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
 
-public class EnderCrafterPatternProviderScreen extends PatternProviderScreen<EnderCrafterPatternProviderMenu> {
+public class EnderCrafterPatternProviderScreen extends AEBaseScreen<EnderCrafterPatternProviderMenu> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(
             Applied_extended_crafting.MODID,
             "textures/gui/ender_crafter_pattern_provider.png"
@@ -27,17 +28,22 @@ public class EnderCrafterPatternProviderScreen extends PatternProviderScreen<End
     private static final int EMPTY_PATTERN_SLOT_TEXTURE_X = 200;
     private static final int EMPTY_PATTERN_SLOT_TEXTURE_Y = 0;
     private static final int EMPTY_PATTERN_SLOT_SIZE = 16;
+    private final EnderCrafterPatternProviderLockReason lockReason;
 
     public EnderCrafterPatternProviderScreen(EnderCrafterPatternProviderMenu menu, Inventory playerInventory,
                                              Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.setTextContent(TEXT_ID_DIALOG_TITLE, title);
+
+        this.lockReason = new EnderCrafterPatternProviderLockReason(this);
+        this.widgets.add("lockReason", this.lockReason);
     }
 
     @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
         this.setSlotsHidden(SlotSemantics.STORAGE, true);
+        this.lockReason.setVisible(this.menu.getLockCraftingMode() != LockCraftingMode.NONE);
     }
 
     @Override

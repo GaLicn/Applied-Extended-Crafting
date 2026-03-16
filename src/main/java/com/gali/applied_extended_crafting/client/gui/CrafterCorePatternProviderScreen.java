@@ -1,6 +1,7 @@
 package com.gali.applied_extended_crafting.client.gui;
 
-import appeng.client.gui.implementations.PatternProviderScreen;
+import appeng.api.config.LockCraftingMode;
+import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import com.gali.applied_extended_crafting.Applied_extended_crafting;
@@ -14,7 +15,7 @@ import net.minecraft.world.inventory.Slot;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class CrafterCorePatternProviderScreen extends PatternProviderScreen<CrafterCorePatternProviderMenu> {
+public class CrafterCorePatternProviderScreen extends AEBaseScreen<CrafterCorePatternProviderMenu> {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(
             Applied_extended_crafting.MODID,
             "textures/gui/crafter_core_pattern_provider.png"
@@ -51,11 +52,15 @@ public class CrafterCorePatternProviderScreen extends PatternProviderScreen<Craf
     private static final int SLOT_RENDER_SIZE = 16;
     private static final Field SLOT_X_FIELD = getSlotField("x");
     private static final Field SLOT_Y_FIELD = getSlotField("y");
+    private final CrafterCorePatternProviderLockReason lockReason;
 
     public CrafterCorePatternProviderScreen(CrafterCorePatternProviderMenu menu, Inventory playerInventory,
                                             Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
         this.setTextContent(TEXT_ID_DIALOG_TITLE, title);
+
+        this.lockReason = new CrafterCorePatternProviderLockReason(this);
+        this.widgets.add("lockReason", this.lockReason);
     }
 
     @Override
@@ -63,6 +68,7 @@ public class CrafterCorePatternProviderScreen extends PatternProviderScreen<Craf
         super.updateBeforeRender();
 
         this.setSlotsHidden(SlotSemantics.STORAGE, true);
+        this.lockReason.setVisible(this.menu.getLockCraftingMode() != LockCraftingMode.NONE);
         this.positionPreviewGridSlots();
         this.positionSingleSlot(this.menu.getSlots(CrafterCorePatternProviderMenu.PREVIEW_RESULT), OUTPUT_SLOT_X,
                 OUTPUT_SLOT_Y);
