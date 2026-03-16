@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "CDE",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "item": "extendedcrafting:enhanced_redstone_ingot"
+    },
+    "B": {
+      "item": "extendedcrafting:flux_star"
+    },
+    "C": {
+      "item": "ae2:annihilation_core"
+    },
+    "D": {
+      "item": "extendedcrafting:auto_flux_crafter"
+    },
+    "E": {
+      "item": "ae2:formation_core"
+    }
+  },
+  "result": {
+    "item": "applied_extended_crafting:flux_crafter_pattern_provider"
+  }
+}
