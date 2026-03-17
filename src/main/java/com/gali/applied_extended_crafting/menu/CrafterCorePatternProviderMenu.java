@@ -7,7 +7,6 @@ import appeng.menu.SlotSemantic;
 import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
-import appeng.menu.implementations.PatternProviderMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
 import appeng.menu.slot.RestrictedInputSlot;
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class CrafterCorePatternProviderMenu extends PatternProviderMenu {
+public class CrafterCorePatternProviderMenu extends ProtectedPatternProviderMenu {
     private static final int PATTERN_SLOT_COUNT = 9;
     private static final int UPGRADE_SLOT_COUNT = 6;
     private static final int PREVIEW_GRID_COLUMNS = 7;
@@ -116,6 +115,7 @@ public class CrafterCorePatternProviderMenu extends PatternProviderMenu {
 
         this.registerClientAction(ACTION_SELECT_PATTERN_SLOT, Integer.class, this::setSelectedPatternSlotInternal);
         this.updateMenuState();
+        this.sealProtectedSlotPlan();
     }
 
     @Override
