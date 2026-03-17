@@ -7,7 +7,6 @@ import appeng.menu.SlotSemantic;
 import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.MenuTypeBuilder;
-import appeng.menu.implementations.PatternProviderMenu;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.FakeSlot;
 import appeng.util.ConfigInventory;
@@ -19,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
-public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
+public class EnderCrafterPatternProviderMenu extends ProtectedPatternProviderMenu {
     private static final int PREVIEW_GRID_SIZE = 9;
     private static final int PROCESS_BAR_WIDTH = 22;
     private static final String ACTION_SELECT_PATTERN_SLOT = "selectPatternSlot";
@@ -88,6 +87,7 @@ public class EnderCrafterPatternProviderMenu extends PatternProviderMenu {
 
         this.registerClientAction(ACTION_SELECT_PATTERN_SLOT, Integer.class, this::setSelectedPatternSlotInternal);
         this.updatePreviewFromPattern();
+        this.sealProtectedSlotPlan();
     }
 
     @Override
