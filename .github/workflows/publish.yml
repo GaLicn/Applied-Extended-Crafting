@@ -46,7 +46,8 @@ jobs:
             release_type="${{ inputs.version_type }}"
           else
             commit_message="${{ github.event.head_commit.message }}"
-            if [[ "${commit_message}" =~ ^更新.+版本$ ]]; then
+            # 兼容原格式，以及追加“;日志:<修订号>”的指定日志格式。
+            if [[ "${commit_message}" =~ ^更新.+版本([;；]日志:[^[:space:];；]+)?$ ]]; then
               should_publish="true"
             else
               should_publish="false"
