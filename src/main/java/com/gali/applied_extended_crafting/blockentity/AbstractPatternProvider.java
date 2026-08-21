@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -116,17 +115,7 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     }
 
     protected boolean isPatternSupported(IPatternDetails patternDetails) {
-        var level = this.getLevel();
-        if (level == null) {
-            return false;
-        }
-
-        var patternInputs = this.extractInputs(patternDetails);
-        if (patternInputs.isEmpty()) {
-            return false;
-        }
-
-        return this.getRecipeMatcher().matchesRecipe(patternInputs.get(), this.extractOutputs(patternDetails), level);
+        return this.findRecipeOutput(patternDetails).isPresent();
     }
 
     protected boolean isPatternItemValid(ItemStack stack) {
@@ -144,7 +133,8 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
     }
 
     protected boolean pushPatternToNetwork(IPatternDetails patternDetails) {
-        if (!this.isPatternSupported(patternDetails)) {
+        var recipeOutput = this.findRecipeOutput(patternDetails);
+        if (recipeOutput.isEmpty()) {
             return false;
         }
 
@@ -153,9 +143,47 @@ public abstract class AbstractPatternProvider extends PatternProviderBlockEntity
             return false;
         }
 
-        this.enqueueOutputs(Arrays.asList(patternDetails.getOutputs()));
+        var output = GenericStack.fromItemStack(recipeOutput.get());
+        if (output == null) {
+            return false;
+        }
+
+        // 自动化产出使用注册配方的标准输出，而不是样板携带的 NBT。
+        this.enqueueOutputs(List.of(output));
 
         return true;
+    }
+
+    protected Optional<ItemStack> findRecipeOutput(IPatternDetails patternDetails) {
+        var level = this.getLevel();
+        if (level == null) {
+            return Optional.empty();
+        }
+
+        var patternInputs = this.extractInputs(patternDetails);
+        if (patternInputs.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var recipeOutput = this.getRecipeMatcher().findRecipeOutput(
+                patternInputs.get(),
+                this.extractOutputs(patternDetails),
+                level
+        );
+        if (recipeOutput == null || recipeOutput.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(recipeOutput.copy());
+    }
+
+    protected List<GenericStack> toGenericOutputs(ItemStack recipeOutput) {
+        if (recipeOutput.isEmpty()) {
+            return List.of();
+        }
+
+        var output = GenericStack.fromItemStack(recipeOutput);
+        return output == null ? List.of() : List.of(output);
     }
 
     protected void enqueueOutputs(List<GenericStack> outputs) {

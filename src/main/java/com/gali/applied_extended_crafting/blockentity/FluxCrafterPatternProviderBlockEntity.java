@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +94,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
             return this.pushPatternToNetwork(patternDetails);
         }
 
-        var outputs = List.copyOf(Arrays.asList(patternDetails.getOutputs()));
+        var outputs = this.toGenericOutputs(recipe.getResultItem(level.registryAccess()));
         if (outputs.isEmpty()) {
             return false;
         }

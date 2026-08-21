@@ -4,6 +4,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import com.blakebr0.extendedcrafting.api.crafting.ICombinationRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -27,6 +28,13 @@ public class CombinationRecipeMatcher implements IRecipeMatcher<ICombinationReci
     @Override
     public boolean matchesRecipe(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
         return this.findRecipe(patternInputs, patternOutputs, level) != null;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack findRecipeOutput(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
+        var recipe = this.findRecipe(patternInputs, patternOutputs, level);
+        return recipe == null ? null : recipe.getResultItem(level.registryAccess());
     }
 
     @Nullable
@@ -70,7 +78,8 @@ public class CombinationRecipeMatcher implements IRecipeMatcher<ICombinationReci
             return false;
         }
 
-        return entry.getValue() == recipeOutput.getCount() && itemKey.matches(recipeOutput);
+        // 只比较物品类型和数量，配方输出不受样板 NBT 影响。
+        return entry.getValue() == recipeOutput.getCount() && itemKey.getItem() == recipeOutput.getItem();
     }
 
     private boolean matchesInputs(Map<AEKey, Long> patternInputs, ICombinationRecipe recipe) {
