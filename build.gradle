@@ -113,6 +113,9 @@ dependencies {
     implementation "curse.maven:ex-pattern-provider-892005:7727948"
 
     runtimeOnly "curse.maven:just-enough-characters-250702:7320033"
+
+
+    runtimeOnly fileTree(dir: 'libs', includes: ['*.jar'])
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
