@@ -8,6 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +32,13 @@ public class FluxCrafterRecipeMatcher implements IRecipeMatcher<IFluxCrafterReci
     @Override
     public boolean matchesRecipe(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
         return this.findRecipe(patternInputs, patternOutputs, level) != null;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack findRecipeOutput(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
+        var recipe = this.findRecipe(patternInputs, patternOutputs, level);
+        return recipe == null ? null : recipe.getResultItem(level.registryAccess());
     }
 
     @Nullable
@@ -65,12 +73,17 @@ public class FluxCrafterRecipeMatcher implements IRecipeMatcher<IFluxCrafterReci
             return patternOutputs.isEmpty();
         }
 
+        if (patternOutputs.size() != 1) {
+            return false;
+        }
+
         var entry = patternOutputs.entrySet().iterator().next();
         if (!(entry.getKey() instanceof AEItemKey itemKey)) {
             return false;
         }
 
-        return entry.getValue() == recipeOutput.getCount() && itemKey.matches(recipeOutput);
+        // 只比较物品类型和数量，配方输出不受样板 NBT/组件影响。
+        return entry.getValue() == recipeOutput.getCount() && itemKey.getItem() == recipeOutput.getItem();
     }
 
     private boolean matchesInputs(Map<AEKey, Long> patternInputs, List<Ingredient> recipeIngredients) {

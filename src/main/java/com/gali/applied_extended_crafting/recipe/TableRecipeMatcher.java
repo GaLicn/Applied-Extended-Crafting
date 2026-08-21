@@ -4,11 +4,13 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import com.blakebr0.extendedcrafting.api.crafting.ITableRecipe;
 import com.blakebr0.extendedcrafting.init.ModRecipeTypes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +36,11 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
 
     @Override
     public boolean matchesRecipe(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
+        return this.findRecipe(patternInputs, patternOutputs, level) != null;
+    }
+
+    @Nullable
+    public ITableRecipe findRecipe(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
         for (var holder : this.getRecipes(level)) {
             var recipe = holder.value();
             if (recipe.hasRequiredTier()) {
@@ -49,11 +56,18 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
             }
 
             if (this.matchesInputs(patternInputs, recipe.getIngredients())) {
-                return true;
+                return recipe;
             }
         }
 
-        return false;
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack findRecipeOutput(Map<AEKey, Long> patternInputs, Map<AEKey, Long> patternOutputs, Level level) {
+        var recipe = this.findRecipe(patternInputs, patternOutputs, level);
+        return recipe == null ? null : recipe.getResultItem(level.registryAccess());
     }
 
     private List<RecipeHolder<ITableRecipe>> getRecipes(Level level) {

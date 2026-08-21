@@ -118,7 +118,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
             return false;
         }
 
-        var outputs = List.copyOf(patternDetails.getOutputs());
+        var outputs = this.toGenericOutputs(recipe.getResultItem(level.registryAccess()));
         if (outputs.isEmpty()) {
             return false;
         }

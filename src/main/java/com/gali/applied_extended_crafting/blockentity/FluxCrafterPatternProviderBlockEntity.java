@@ -95,7 +95,7 @@ public class FluxCrafterPatternProviderBlockEntity extends AbstractPatternProvid
             return this.pushPatternToNetwork(patternDetails);
         }
 
-        var outputs = List.copyOf(patternDetails.getOutputs());
+        var outputs = this.toGenericOutputs(recipe.getResultItem(level.registryAccess()));
         if (outputs.isEmpty()) {
             return false;
         }

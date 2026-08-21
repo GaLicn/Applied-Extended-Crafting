@@ -74,6 +74,20 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
             return false;
         }
 
+        var level = this.getLevel();
+        if (level == null) {
+            return false;
+        }
+
+        var recipe = this.recipeMatcher.findRecipe(
+                this.extractInputs(patternDetails).orElseGet(java.util.Map::of),
+                this.extractOutputs(patternDetails),
+                level
+        );
+        if (recipe == null) {
+            return false;
+        }
+
         int alternatorCount = this.getAlternatorCount();
         if (this.shouldOutputInstantly(alternatorCount)) {
             this.finishProcessingImmediately();
@@ -84,7 +98,7 @@ public class EnderCrafterPatternProviderBlockEntity extends AbstractPatternProvi
             return false;
         }
 
-        var outputs = List.copyOf(patternDetails.getOutputs());
+        var outputs = this.toGenericOutputs(recipe.getResultItem(level.registryAccess()));
         if (outputs.isEmpty()) {
             return false;
         }
