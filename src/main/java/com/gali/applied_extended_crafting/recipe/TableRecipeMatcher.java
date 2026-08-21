@@ -70,12 +70,17 @@ public class TableRecipeMatcher implements IRecipeMatcher<ITableRecipe> {
             return patternOutputs.isEmpty();
         }
 
+        if (patternOutputs.size() != 1) {
+            return false;
+        }
+
         var entry = patternOutputs.entrySet().iterator().next();
         if (!(entry.getKey() instanceof AEItemKey itemKey)) {
             return false;
         }
 
-        return entry.getValue() == recipeOutput.getCount() && itemKey.matches(recipeOutput);
+        // 只比较物品类型和数量，避免工具的 NBT 差异阻止样板插入。
+        return entry.getValue() == recipeOutput.getCount() && itemKey.getItem() == recipeOutput.getItem();
     }
 
     private boolean matchesInputs(Map<AEKey, Long> patternInputs, List<Ingredient> recipeIngredients) {
