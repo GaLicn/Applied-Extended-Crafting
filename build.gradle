@@ -120,6 +120,10 @@ dependencies {
     implementation "curse.maven:guideme-1173950:8204880"
     implementation "curse.maven:extended-crafting-268387:8078667"
     implementation "curse.maven:cucumber-272335:8433624"
+    implementation "curse.maven:jei-238222:8676045"
+    implementation "curse.maven:jade-324717:8651070"
+
+    // AE2 26.1.2 已内置 JEI 集成；独立集成模组目前仅支持 Minecraft 1.21.1。
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

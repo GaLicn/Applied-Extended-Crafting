@@ -19,15 +19,12 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.Objects;
 
-@OnlyIn(Dist.CLIENT)
 public class PatternProviderPowerLightRenderer<T extends AbstractPatternProvider>
         implements BlockEntityRenderer<T, PatternProviderPowerLightRenderer.PowerLightRenderState> {
     public static final Identifier LIGHTS_MODEL_ID = AppEng.makeId("block/molecular_assembler_lights");
