@@ -1,0 +1,13 @@
+{
+  "itemGroup.applied_extended_crafting": "Example Mod Tab",
+  "block.applied_extended_crafting.example_block": "Example Block",
+  "item.applied_extended_crafting.example_item": "Example Item",
+
+  "applied_extended_crafting.configuration.title": "Applied Extended Crafting Configs",
+  "applied_extended_crafting.configuration.section.applied_extended_crafting.common.toml": "Applied Extended Crafting Configs",
+  "applied_extended_crafting.configuration.section.applied_extended_crafting.common.toml.title": "Applied Extended Crafting Configs",
+  "applied_extended_crafting.configuration.items": "Item List",
+  "applied_extended_crafting.configuration.logDirtBlock": "Log Dirt Block",
+  "applied_extended_crafting.configuration.magicNumberIntroduction": "Magic Number Text",
+  "applied_extended_crafting.configuration.magicNumber": "Magic Number"
+}
