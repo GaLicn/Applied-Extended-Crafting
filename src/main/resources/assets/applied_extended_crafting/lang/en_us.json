@@ -1,13 +1,10 @@
 {
-  "itemGroup.applied_extended_crafting": "Example Mod Tab",
-  "block.applied_extended_crafting.example_block": "Example Block",
-  "item.applied_extended_crafting.example_item": "Example Item",
-
-  "applied_extended_crafting.configuration.title": "Applied Extended Crafting Configs",
-  "applied_extended_crafting.configuration.section.applied_extended_crafting.common.toml": "Applied Extended Crafting Configs",
-  "applied_extended_crafting.configuration.section.applied_extended_crafting.common.toml.title": "Applied Extended Crafting Configs",
-  "applied_extended_crafting.configuration.items": "Item List",
-  "applied_extended_crafting.configuration.logDirtBlock": "Log Dirt Block",
-  "applied_extended_crafting.configuration.magicNumberIntroduction": "Magic Number Text",
-  "applied_extended_crafting.configuration.magicNumber": "Magic Number"
+  "itemGroup.applied_extended_crafting": "Applied Extended Crafting",
+  "block.applied_extended_crafting.table_basic_pattern_provider": "Basic Table Assembly Station",
+  "block.applied_extended_crafting.table_advanced_pattern_provider": "Advanced Table Assembly Station",
+  "block.applied_extended_crafting.table_elite_pattern_provider": "Elite Table Assembly Station",
+  "block.applied_extended_crafting.table_ultimate_pattern_provider": "Ultimate Table Assembly Station",
+  "block.applied_extended_crafting.ender_crafter_pattern_provider": "Ender Crafter Assembly Station",
+  "block.applied_extended_crafting.crafter_core_pattern_provider": "Crafting Core Assembly Station",
+  "block.applied_extended_crafting.flux_crafter_pattern_provider": "Flux Crafter Assembly Station"
 }

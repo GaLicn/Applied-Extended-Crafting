@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "CDE",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:gold_ingot"
+    },
+    "B": {
+      "item": "ae2:quartz_glass"
+    },
+    "C": {
+      "item": "ae2:annihilation_core"
+    },
+    "D": {
+      "item": "extendedcrafting:advanced_auto_table"
+    },
+    "E": {
+      "item": "ae2:formation_core"
+    }
+  },
+  "result": {
+    "id": "applied_extended_crafting:table_advanced_pattern_provider"
+  }
+}

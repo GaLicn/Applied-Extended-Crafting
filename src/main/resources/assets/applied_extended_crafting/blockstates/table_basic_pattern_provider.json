@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model":"applied_extended_crafting:block/table_basic_pattern_provider"}
+  }
+}
