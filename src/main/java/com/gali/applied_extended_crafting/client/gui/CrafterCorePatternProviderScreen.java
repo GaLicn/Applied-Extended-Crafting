@@ -50,8 +50,8 @@ public class CrafterCorePatternProviderScreen extends AEBaseScreen<CrafterCorePa
     private static final int EMPTY_PEDESTAL_SLOT_TEXTURE_X = 237;
     private static final int EMPTY_PEDESTAL_SLOT_TEXTURE_Y = 54;
     private static final int SLOT_RENDER_SIZE = 16;
-    private static final Field SLOT_X_FIELD = getSlotField("x");
-    private static final Field SLOT_Y_FIELD = getSlotField("y");
+    private static final Field SLOT_X_FIELD = getSlotField("x", "f_40220_");
+    private static final Field SLOT_Y_FIELD = getSlotField("y", "f_40221_");
     private final CrafterCorePatternProviderLockReason lockReason;
 
     public CrafterCorePatternProviderScreen(CrafterCorePatternProviderMenu menu, Inventory playerInventory,
@@ -252,13 +252,31 @@ public class CrafterCorePatternProviderScreen extends AEBaseScreen<CrafterCorePa
         }
     }
 
-    private static Field getSlotField(String name) {
-        try {
-            Field field = Slot.class.getDeclaredField(name);
-            field.setAccessible(true);
-            return field;
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Missing Slot field: " + name, e);
+    /**
+     * Resolves one of {@link Slot}'s coordinate fields in every mapping environment this mod is built for.
+     * <p>
+     * Development runs and loaders that keep the official Mojang names at runtime expose them as
+     * {@code x}/{@code y}. A production Forge 1.20.1 jar is remapped to SRG names instead, where the very same
+     * fields are called {@code f_40220_}/{@code f_40221_}. Only looking up the official name throws
+     * {@link NoSuchFieldException} there, and because this happens from a static initializer the resulting
+     * {@link ExceptionInInitializerError} aborts the whole screen, leaving the crafter core pattern provider
+     * impossible to open. Both spellings are therefore tried.
+     *
+     * @param officialName the official Mojang name of the field, used in development and on loaders that run
+     *                     with official mappings
+     * @param srgName      the SRG name the field is remapped to in a production Forge jar
+     * @return the resolved, accessible field
+     */
+    private static Field getSlotField(String officialName, String srgName) {
+        for (String candidate : new String[] { officialName, srgName }) {
+            try {
+                Field field = Slot.class.getDeclaredField(candidate);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException ignored) {
+                // Try the next known name for this field.
+            }
         }
+        throw new IllegalStateException("Missing Slot field: " + officialName + " (aka " + srgName + ")");
     }
 }

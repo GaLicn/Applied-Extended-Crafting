@@ -331,14 +331,14 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
 
     private DisplayPreview buildDisplayPreview(IPatternDetails patternDetails, ICombinationRecipe recipe) {
         var remainingInputs = this.collectDisplayInputs(patternDetails);
-        var centerIngredient = this.getCenterIngredient(recipe);
+        var centerIngredient = CombinationRecipeMatcher.getCenterIngredient(recipe);
         var centerInput = this.takeFirstMatching(remainingInputs, centerIngredient);
         if (centerInput == null) {
             centerInput = this.createDisplayStack(centerIngredient);
         }
 
         var pedestalInputs = new ArrayList<GenericStack>();
-        for (var ingredient : recipe.getIngredients()) {
+        for (var ingredient : CombinationRecipeMatcher.getPedestalIngredients(recipe)) {
             if (ingredient.isEmpty()) {
                 continue;
             }
@@ -370,22 +370,6 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
         }
 
         return result;
-    }
-
-    private Ingredient getCenterIngredient(ICombinationRecipe recipe) {
-        for (String methodName : List.of("getInput", "getCatalyst", "getMainInput", "getCatalystInput",
-                "getCoreInput")) {
-            try {
-                var method = recipe.getClass().getMethod(methodName);
-                var result = method.invoke(recipe);
-                if (result instanceof Ingredient ingredient) {
-                    return ingredient;
-                }
-            } catch (ReflectiveOperationException ignored) {
-            }
-        }
-
-        return Ingredient.EMPTY;
     }
 
     @Nullable
@@ -430,14 +414,7 @@ public class CrafterCorePatternProviderBlockEntity extends AbstractPatternProvid
     }
 
     private int getRequiredPedestalCount(ICombinationRecipe recipe) {
-        int count = 0;
-        for (var ingredient : recipe.getIngredients()) {
-            if (!ingredient.isEmpty()) {
-                count++;
-            }
-        }
-
-        return count;
+        return CombinationRecipeMatcher.getPedestalIngredients(recipe).size();
     }
 
     private boolean isPedestalStack(ItemStack stack) {
