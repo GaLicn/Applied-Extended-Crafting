@@ -88,16 +88,14 @@ public class CombinationRecipeMatcher implements IRecipeMatcher<ICombinationReci
             return false;
         }
 
-        var pedestalIngredients = recipe.getIngredients().stream()
-                .filter(ingredient -> !ingredient.isEmpty())
-                .toList();
-
-        if (expandedInputs.size() != pedestalIngredients.size() + 1) {
+        var centerIngredient = getCenterIngredient(recipe);
+        if (centerIngredient.isEmpty()) {
             return false;
         }
 
-        var centerIngredient = this.getCenterIngredient(recipe);
-        if (centerIngredient.isEmpty()) {
+        var pedestalIngredients = getPedestalIngredients(recipe);
+
+        if (expandedInputs.size() != pedestalIngredients.size() + 1) {
             return false;
         }
 
@@ -139,20 +137,28 @@ public class CombinationRecipeMatcher implements IRecipeMatcher<ICombinationReci
         return expanded;
     }
 
-    private Ingredient getCenterIngredient(ICombinationRecipe recipe) {
-        for (String methodName : List.of("getInput", "getCatalyst", "getMainInput", "getCatalystInput",
-                "getCoreInput")) {
-            try {
-                var method = recipe.getClass().getMethod(methodName);
-                var result = method.invoke(recipe);
-                if (result instanceof Ingredient ingredient) {
-                    return ingredient;
-                }
-            } catch (ReflectiveOperationException ignored) {
-            }
+    /**
+     * 1.20.1 版 ExtendedCrafting 把中心输入放在配料表索引 0，其后才是基座输入
+     * （见 CombinationRecipe.Serializer#fromJson 与 CombinationRecipe#matches）；
+     * 该版本没有 getInput()/getCatalyst() 之类的访问器。
+     */
+    public static Ingredient getCenterIngredient(ICombinationRecipe recipe) {
+        var ingredients = recipe.getIngredients();
+        return ingredients.isEmpty() ? Ingredient.EMPTY : ingredients.get(0);
+    }
+
+    /**
+     * 基座输入：跳过索引 0 的中心输入，并忽略空配料。
+     */
+    public static List<Ingredient> getPedestalIngredients(ICombinationRecipe recipe) {
+        var ingredients = recipe.getIngredients();
+        if (ingredients.size() <= 1) {
+            return List.of();
         }
 
-        return Ingredient.EMPTY;
+        return ingredients.subList(1, ingredients.size()).stream()
+                .filter(ingredient -> !ingredient.isEmpty())
+                .toList();
     }
 
     private boolean matchIngredients(List<Ingredient> ingredients, List<AEItemKey> inputs) {
